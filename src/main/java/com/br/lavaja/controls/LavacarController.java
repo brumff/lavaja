@@ -1,4 +1,5 @@
 package com.br.lavaja.controls;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,22 @@ public class LavacarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity <LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
+    public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
         return lavacarRepository.findById(id).map(lavacarModel -> {
+            lavacarModel.setCnpj(newLavacar.getCnpj());
             lavacarModel.setNome(newLavacar.getNome());
+            lavacarModel.setLogradouro(newLavacar.getLogradouro());
+            lavacarModel.setNumero(newLavacar.getNumero());
+            lavacarModel.setComplemento(newLavacar.getComplemento());
+            lavacarModel.setBairro(newLavacar.getBairro());
+            lavacarModel.setCidade(newLavacar.getCidade());
+            lavacarModel.setCep(newLavacar.getCep());
+            lavacarModel.setTelefone1(newLavacar.getTelefone1());
+            lavacarModel.setTelefone2(newLavacar.getTelefone2());
+            lavacarModel.setEmail(newLavacar.getEmail());
+            lavacarModel.setSenha(newLavacar.getSenha());
+            lavacarModel.setConfSenha(newLavacar.getConfSenha());
+            lavacarModel.setAtivo(newLavacar.getAtivo());
             LavacarModel lavacarUpdate = lavacarRepository.save(lavacarModel);
             return ResponseEntity.ok().body(lavacarUpdate);
         }).orElse(ResponseEntity.notFound().build());
@@ -53,7 +67,20 @@ public class LavacarController {
 
     @DeleteMapping("/{id}")
     public void deleteLavacar(@PathVariable Integer id) {
-        this.lavacarRepository.deleteById(id); 
+        this.lavacarRepository.deleteById(id);
     }
 
+   /* @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String senha = loginRequest.getSenha();
+
+        LavacarModel lavacar = lavacarRepository.findByEmail(email);
+
+       // if (lavacar == null || !lavacar.getSenha().equals(senha)) {
+         //   return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        //}
+
+        return ResponseEntity.ok().build();
+    } */
 }
