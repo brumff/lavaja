@@ -2,6 +2,7 @@ package com.br.lavaja.controls;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,14 @@ public class DonoCarroController {
     @Autowired
     private DonoCarroRepository donoCarroRepository;
 
+    private BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @PostMapping
     public DonoCarroModel createDonoCarro(@RequestBody DonoCarroModel donoCarro){
+        donoCarro.setSenha(passwordEncoder().encode(donoCarro.getSenha()));
+        donoCarro.setConfSenha(passwordEncoder().encode(donoCarro.getConfSenha()));
         return donoCarroRepository.save(donoCarro);
     }
 

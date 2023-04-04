@@ -12,4 +12,6 @@ public interface DonoCarroRepository extends JpaRepository<DonoCarroModel, Integ
 
     Optional<DonoCarroModel> findById(Integer id);
 
+    DonoCarroModel findByEmail(String email);
+
 }
