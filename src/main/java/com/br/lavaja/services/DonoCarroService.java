@@ -17,15 +17,16 @@ public class DonoCarroService {
         return new BCryptPasswordEncoder();
     }
 
-    public DonoCarroModel execute(DonoCarroModel donoCarro) {
+    public DonoCarroModel createDonoCarro(DonoCarroModel donoCarro) {
 
-        DonoCarroModel existeDonoCarro = donoCarroRepository.findByEmail(donoCarro.getEmail());
+       /*  DonoCarroModel existeDonoCarro = donoCarroRepository.findByEmail(donoCarro.getEmail());
 
         if (existeDonoCarro != null) {
             throw new Error("Usuário já existe");
-        }
+        }*/
 
         donoCarro.setSenha(passwordEncoder().encode(donoCarro.getSenha()));
+        donoCarro.setConfSenha(passwordEncoder().encode(donoCarro.getConfSenha()));
         DonoCarroModel createDonoCarro = donoCarroRepository.save(donoCarro);
 
         return createDonoCarro;

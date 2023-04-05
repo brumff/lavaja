@@ -1,12 +1,15 @@
 package com.br.lavaja.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -26,7 +29,8 @@ public class DonoCarroModel {
     private String senha;
     @Size(max= 30)
     private String confSenha;
-    @ManyToMany
+    @OneToMany(mappedBy = "donoCarro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoleModel> roles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -69,6 +73,11 @@ public class DonoCarroModel {
     }
     public void setConfSenha(String confSenha) {
         this.confSenha = confSenha;
+    }
+    public List<RoleModel> getRoles() {
+        return null;
+    }
+    public void setRoles(List<RoleModel> roles) {
     }
 
    
