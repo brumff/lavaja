@@ -19,11 +19,11 @@ public class DonoCarroService {
 
     public DonoCarroModel createDonoCarro(DonoCarroModel donoCarro) {
 
-       /*  DonoCarroModel existeDonoCarro = donoCarroRepository.findByEmail(donoCarro.getEmail());
+        DonoCarroModel existeDonoCarro = donoCarroRepository.findByEmail(donoCarro.getEmail());
 
         if (existeDonoCarro != null) {
             throw new Error("Usuário já existe");
-        }*/
+        }
 
         donoCarro.setSenha(passwordEncoder().encode(donoCarro.getSenha()));
         donoCarro.setConfSenha(passwordEncoder().encode(donoCarro.getConfSenha()));
@@ -32,5 +32,7 @@ public class DonoCarroService {
         return createDonoCarro;
 
     }
+
+
 
 }

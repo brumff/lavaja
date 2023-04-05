@@ -29,8 +29,7 @@ public class DonoCarroModel {
     private String senha;
     @Size(max= 30)
     private String confSenha;
-    @OneToMany(mappedBy = "donoCarro", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoleModel> roles = new ArrayList<>();
+
 
     public Integer getId() {
         return id;
@@ -74,11 +73,7 @@ public class DonoCarroModel {
     public void setConfSenha(String confSenha) {
         this.confSenha = confSenha;
     }
-    public List<RoleModel> getRoles() {
-        return null;
-    }
-    public void setRoles(List<RoleModel> roles) {
-    }
+
 
    
     

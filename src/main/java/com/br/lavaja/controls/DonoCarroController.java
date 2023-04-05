@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.br.lavaja.models.DonoCarroModel;
-import com.br.lavaja.models.RoleModel;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.services.DonoCarroService;
 
@@ -23,20 +22,15 @@ public class DonoCarroController {
     @Autowired
     private DonoCarroService donoCarroService;
 
-
-
-    private BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private DonoCarroRepository donoCarroRepository;
 
     @PostMapping
     public DonoCarroModel createDonoCarro(@RequestBody DonoCarroModel donoCarro){
-        /*donoCarro.setSenha(passwordEncoder().encode(donoCarro.getSenha()));
-        donoCarro.setConfSenha(passwordEncoder().encode(donoCarro.getConfSenha()));*/
         return donoCarroService.createDonoCarro(donoCarro);
     }
 
-   /* @GetMapping("/{id}")
+    @GetMapping("/{id}")
     public DonoCarroModel getDonoCarro(@PathVariable Integer id){
         return this.donoCarroRepository.findById(id).get();
     }
@@ -51,6 +45,7 @@ public class DonoCarroController {
             DonoCarroModel donoCarroUpdate = donoCarroRepository.save(donoCarroModel);
             return ResponseEntity.ok().body(donoCarroUpdate);
         }).orElse(ResponseEntity.notFound().build());
-    }*/
+    }
+    
 
 }
