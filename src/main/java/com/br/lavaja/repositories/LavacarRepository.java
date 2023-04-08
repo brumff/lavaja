@@ -11,6 +11,6 @@ public interface LavacarRepository extends JpaRepository <LavacarModel, Integer>
 
     Optional<LavacarModel> findById(Integer id);
 
-    //LavacarModel findByEmail(String email);
+    LavacarModel findByEmail(String email);
     
 }

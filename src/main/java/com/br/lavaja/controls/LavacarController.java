@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.repositories.LavacarRepository;
+import com.br.lavaja.services.LavaCarService;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +29,12 @@ public class LavacarController {
     @Autowired
     private LavacarRepository lavacarRepository;
 
+    @Autowired
+    private LavaCarService lavaCarService; 
+
     @PostMapping
     public LavacarModel createLavacar(@RequestBody LavacarModel lavacar) {
-        return lavacarRepository.save(lavacar);
+        return lavaCarService.createDonoCarro(lavacar);
     }
 
     @GetMapping
