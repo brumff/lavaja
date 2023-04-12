@@ -9,7 +9,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/api/v1/lavacar", "/api/v1/donocarro").permitAll().and().httpBasic();
+        http.csrf().disable().authorizeRequests().antMatchers("/api/v1/donocarro", "/api/v1/lavacar").permitAll().and().httpBasic();
     }
     
 }

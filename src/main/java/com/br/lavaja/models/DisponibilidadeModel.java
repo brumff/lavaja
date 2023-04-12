@@ -1,6 +1,7 @@
 package com.br.lavaja.models;
 
 import java.sql.Time;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,8 @@ public class DisponibilidadeModel {
     private Boolean sex;
     private Boolean sab;
     private Boolean dom;
-    private Time abre;
-    private Time fecha;
+    private Date abre;
+    private Date fecha;
 
     public Integer getId() {
         return id;
@@ -89,19 +90,19 @@ public class DisponibilidadeModel {
         this.dom = dom;
     }
 
-    public Time getAbre() {
+    public Date getAbre() {
         return abre;
     }
 
-    public void setAbre(Time abre) {
+    public void setAbre(Date abre) {
         this.abre = abre;
     }
 
-    public Time getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Time fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
