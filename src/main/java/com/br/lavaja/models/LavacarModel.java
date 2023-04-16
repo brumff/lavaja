@@ -2,10 +2,16 @@ package com.br.lavaja.models;
 
 import java.sql.Time;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,9 +25,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.br.lavaja.enums.Perfil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "lavacar")
-public class LavacarModel implements UserDetails{
+public class LavacarModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +52,23 @@ public class LavacarModel implements UserDetails{
     private String telefone2;
     @Email
     private String email;
+    //@JsonIgnore
     private String senha;
+    //@JsonIgnore
     private String confSenha;
     private Boolean ativo;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="perfis")
+    private Set<Integer> perfis = new HashSet<>();
+    /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "disponibilidade_id", referencedColumnName = "id")
-    private DisponibilidadeModel disponibilidadeModel;
+    private DisponibilidadeModel disponibilidadeModel;*/
+
+    public LavacarModel(){
+        this.addPerfil(Perfil.LAVACAR);
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -145,41 +165,13 @@ public class LavacarModel implements UserDetails{
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-    public DisponibilidadeModel getDisponibilidadeModel() {
-        return disponibilidadeModel;
-    }
-    public void setDisponibilidadeModel(DisponibilidadeModel disponibilidadeModel) {
-        this.disponibilidadeModel = disponibilidadeModel;
-    }
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-    @Override
-    public String getPassword() {
-        return senha;
-    }
-    @Override
-    public String getUsername() {
-       return email;
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isEnabled() {
-        return true;
+
+    public Set<Perfil> getPerfis (){
+        return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
     }
 
-   
+    public void addPerfil(Perfil perfil){
+        perfis.add(perfil.getCod());
+    }
 
 }
