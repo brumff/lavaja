@@ -3,6 +3,7 @@ package com.br.lavaja.controls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,12 +42,12 @@ public class LavacarController {
     public ResponseEntity<List<LavacarModel>> getAllLavacar() {
         return ResponseEntity.status(HttpStatus.OK).body(lavacarRepository.findAll());
     }
-
+    @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/{id}")
     public LavacarModel getLavacar(@PathVariable Integer id) {
         return this.lavacarRepository.findById(id).get();
     }
-
+    @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
         return lavacarRepository.findById(id).map(lavacarModel -> {
@@ -68,7 +69,7 @@ public class LavacarController {
             return ResponseEntity.ok().body(lavacarUpdate);
         }).orElse(ResponseEntity.notFound().build());
     }
-
+    @PreAuthorize("hasAnyRole('LAVACAR')")
     @DeleteMapping("/{id}")
     public void deleteLavacar(@PathVariable Integer id) {
         this.lavacarRepository.deleteById(id);
