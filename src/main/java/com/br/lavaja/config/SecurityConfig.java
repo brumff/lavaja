@@ -1,5 +1,7 @@
 package com.br.lavaja.config;
 
+import javax.servlet.Filter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.br.lavaja.security.JWTAuthenticationFilter;
+import com.br.lavaja.security.JWTAuthorizationFilter;
 import com.br.lavaja.security.JWTUtil;
 
 @Configuration
@@ -38,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(null, PUBLIC_MATCHERS).permitAll()
                 .anyRequest().authenticated();
                 http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+                http.addFilter((Filter) new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
                 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
