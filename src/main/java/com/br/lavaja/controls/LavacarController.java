@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.lavaja.enums.Perfil;
+import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.repositories.LavacarRepository;
+import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.LavaCarService;
+import com.br.lavaja.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +49,10 @@ public class LavacarController {
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/{id}")
     public LavacarModel getLavacar(@PathVariable Integer id) {
+        UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
         return this.lavacarRepository.findById(id).get();
     }
     @PreAuthorize("hasAnyRole('LAVACAR')")

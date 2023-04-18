@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.br.lavaja.models.LavacarModel;
 
 @Repository
-public interface LavacarRepository extends JpaRepository <LavacarModel, Integer>{
+public interface LavacarRepository extends JpaRepository<LavacarModel, Integer>{
 
-    Optional<LavacarModel> findById(Integer id);
 
     LavacarModel findByEmail(String email);
+
+    //Optional<LavacarModel> findById(Integer id);
+
     
 }

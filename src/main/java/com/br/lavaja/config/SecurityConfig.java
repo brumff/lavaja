@@ -38,7 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {
-        "/api/v1/lavacar"
+        "/api/v1/lavacar",
+        "/api/v1/donocarro"
 };
 
     @Override

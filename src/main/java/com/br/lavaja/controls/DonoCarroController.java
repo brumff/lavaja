@@ -19,7 +19,7 @@ import com.br.lavaja.services.DonoCarroService;
 @RestController
 @RequestMapping("/api/v1/donocarro")
 public class DonoCarroController {
-    
+
     @Autowired
     private DonoCarroService donoCarroService;
 
@@ -27,17 +27,20 @@ public class DonoCarroController {
     private DonoCarroRepository donoCarroRepository;
 
     @PostMapping
-    public DonoCarroModel createDonoCarro(@RequestBody DonoCarroModel donoCarro){
+    public DonoCarroModel createDonoCarro(@RequestBody DonoCarroModel donoCarro) {
         return donoCarroService.createDonoCarro(donoCarro);
     }
 
+    @PreAuthorize("hasAnyRole('DONOCARRO')")
     @GetMapping("/{id}")
-    public DonoCarroModel getDonoCarro(@PathVariable Integer id){
+    public DonoCarroModel getDonoCarro(@PathVariable Integer id) {
         return this.donoCarroRepository.findById(id).get();
     }
 
+    @PreAuthorize("hasAnyRole('DONOCARRO')")
     @PutMapping("/{id}")
-    public ResponseEntity<DonoCarroModel> putDonoCarro (@RequestBody DonoCarroModel newDonoCarro, @PathVariable Integer id){
+    public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro,
+            @PathVariable Integer id) {
         return donoCarroRepository.findById(id).map(donoCarroModel -> {
             donoCarroModel.setNome(newDonoCarro.getNome());
             donoCarroModel.setTelefone(newDonoCarro.getTelefone());
@@ -47,6 +50,5 @@ public class DonoCarroController {
             return ResponseEntity.ok().body(donoCarroUpdate);
         }).orElse(ResponseEntity.notFound().build());
     }
-    
 
 }
