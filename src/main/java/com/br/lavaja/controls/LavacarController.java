@@ -55,30 +55,9 @@ public class LavacarController {
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
-        UserSS user = UserService.authenticated();
-		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
-			throw new AuthorizationException("Acesso negado");
-		}
-        return lavacarRepository.findById(id).map(lavacarModel -> {
-            lavacarModel.setCnpj(newLavacar.getCnpj());
-            lavacarModel.setNome(newLavacar.getNome());
-            lavacarModel.setLogradouro(newLavacar.getLogradouro());
-            lavacarModel.setNumero(newLavacar.getNumero());
-            lavacarModel.setComplemento(newLavacar.getComplemento());
-            lavacarModel.setBairro(newLavacar.getBairro());
-            lavacarModel.setCidade(newLavacar.getCidade());
-            lavacarModel.setCep(newLavacar.getCep());
-            lavacarModel.setTelefone1(newLavacar.getTelefone1());
-            lavacarModel.setTelefone2(newLavacar.getTelefone2());
-            lavacarModel.setEmail(newLavacar.getEmail());
-            lavacarModel.setSenha(newLavacar.getSenha());
-            lavacarModel.setConfSenha(newLavacar.getConfSenha());
-            lavacarModel.setAtivo(newLavacar.getAtivo());
-            LavacarModel lavacarUpdate = lavacarRepository.save(lavacarModel);
-            return ResponseEntity.ok().body(lavacarUpdate);
-        }).orElse(ResponseEntity.notFound().build());
+        return lavaCarService.updateLavacar(id, newLavacar);
     }
-    
+
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @DeleteMapping("/{id}")
     public void deleteLavacar(@PathVariable Integer id) {

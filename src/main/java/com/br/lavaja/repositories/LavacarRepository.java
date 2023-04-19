@@ -10,9 +10,8 @@ import com.br.lavaja.models.LavacarModel;
 public interface LavacarRepository extends JpaRepository<LavacarModel, Integer>{
 
 
-    LavacarModel findByEmail(String email);
+   LavacarModel findByEmail(String email);
 
-    //Optional<LavacarModel> findById(Integer id);
 
     
 }

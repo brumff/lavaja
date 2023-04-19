@@ -48,18 +48,7 @@ public class DonoCarroController {
     @PutMapping("/{id}")
     public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro,
             @PathVariable Integer id) {
-                UserSS user = UserService.authenticated();
-        if(user == null || !id.equals(user.getId())) {
-            throw new AuthorizationException("Acesso negado");
-        }
-        return donoCarroRepository.findById(id).map(donoCarroModel -> {
-            donoCarroModel.setNome(newDonoCarro.getNome());
-            donoCarroModel.setTelefone(newDonoCarro.getTelefone());
-            donoCarroModel.setEmail(newDonoCarro.getEmail());
-            donoCarroModel.setGenero(newDonoCarro.getGenero());
-            DonoCarroModel donoCarroUpdate = donoCarroRepository.save(donoCarroModel);
-            return ResponseEntity.ok().body(donoCarroUpdate);
-        }).orElse(ResponseEntity.notFound().build());
+                return donoCarroService.updateDonoCarro(id, newDonoCarro);
     }
 
 }
