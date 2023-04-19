@@ -11,6 +11,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,15 +60,12 @@ public class LavacarModel{
     private String confSenha;
     private Boolean ativo;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="perfis")
-    private Set<Integer> perfis = new HashSet<>();
-    /*@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "disponibilidade_id", referencedColumnName = "id")
-    private DisponibilidadeModel disponibilidadeModel;*/
+    @Enumerated(EnumType.STRING)
+    private Perfil perfis;
+
 
     public LavacarModel(){
-        this.addPerfil(Perfil.LAVACAR);
+        this.perfis = Perfil.LAVACAR;
     }
     
     public Integer getId() {
@@ -166,12 +165,8 @@ public class LavacarModel{
         this.ativo = ativo;
     }
 
-    public Set<Perfil> getPerfis (){
-        return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
-    }
-
-    public void addPerfil(Perfil perfil){
-        perfis.add(perfil.getCod());
+    public Perfil getPerfis (){
+        return this.perfis;
     }
 
 }

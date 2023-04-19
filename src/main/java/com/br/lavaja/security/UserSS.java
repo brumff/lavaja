@@ -1,6 +1,7 @@
 package com.br.lavaja.security;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,11 +22,13 @@ public class UserSS implements UserDetails {
 
     }
 
-    public UserSS(Integer id, String email, String senha, Set<Perfil> perfis) {
+    public UserSS(Integer id, String email, String senha, Perfil perfis) {
+        final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(perfis.getDescricao()));
+
         this.id = id;
         this.email = email;
         this.senha = senha;
-        this.authorities = perfis.stream().map(x -> new SimpleGrantedAuthority(x.getDescricao())).collect(Collectors.toList());
+        this.authorities = authorities;
     }
 
     public Integer getId() {

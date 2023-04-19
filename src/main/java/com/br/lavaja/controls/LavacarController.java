@@ -49,15 +49,16 @@ public class LavacarController {
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/{id}")
     public LavacarModel getLavacar(@PathVariable Integer id) {
-        UserSS user = UserService.authenticated();
-		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
-			throw new AuthorizationException("Acesso negado");
-		}
+        
         return this.lavacarRepository.findById(id).get();
     }
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
+        UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
         return lavacarRepository.findById(id).map(lavacarModel -> {
             lavacarModel.setCnpj(newLavacar.getCnpj());
             lavacarModel.setNome(newLavacar.getNome());
@@ -77,6 +78,7 @@ public class LavacarController {
             return ResponseEntity.ok().body(lavacarUpdate);
         }).orElse(ResponseEntity.notFound().build());
     }
+    
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @DeleteMapping("/{id}")
     public void deleteLavacar(@PathVariable Integer id) {

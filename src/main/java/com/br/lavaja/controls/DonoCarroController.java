@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.repositories.DonoCarroRepository;
+import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.DonoCarroService;
+import com.br.lavaja.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/donocarro")
@@ -34,6 +37,10 @@ public class DonoCarroController {
     @PreAuthorize("hasAnyRole('DONOCARRO')")
     @GetMapping("/{id}")
     public DonoCarroModel getDonoCarro(@PathVariable Integer id) {
+        UserSS user = UserService.authenticated();
+        if(user == null || !id.equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
         return this.donoCarroRepository.findById(id).get();
     }
 
@@ -41,6 +48,10 @@ public class DonoCarroController {
     @PutMapping("/{id}")
     public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro,
             @PathVariable Integer id) {
+                UserSS user = UserService.authenticated();
+        if(user == null || !id.equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
         return donoCarroRepository.findById(id).map(donoCarroModel -> {
             donoCarroModel.setNome(newDonoCarro.getNome());
             donoCarroModel.setTelefone(newDonoCarro.getTelefone());

@@ -10,6 +10,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,13 +39,12 @@ public class DonoCarroModel {
     private String senha;
     @Size(max = 30)
     private String confSenha;
-   /*  @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "perfis")
-    private Set<Integer> perfis = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private Perfil perfis;
 
     public DonoCarroModel() {
-        this.addPerfil(Perfil.DONOCARRO);
-    }*/
+        this.perfis = Perfil.DONOCARRO;
+    }
 
     public Integer getId() {
         return id;
@@ -101,13 +102,8 @@ public class DonoCarroModel {
         this.confSenha = confSenha;
     }
 
-   /*  public Set<Perfil> getPerfis() {
-        return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+    public Perfil getPerfis() {
+        return this.perfis;
     }
-
-    public void addPerfil(Perfil perfil) {
-        perfis.add(perfil.getCod());
-    }
-    }*/
 
 }
