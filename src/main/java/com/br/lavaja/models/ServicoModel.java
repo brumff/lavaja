@@ -67,11 +67,7 @@ public class ServicoModel {
     public void setLavacarId(Integer lavacarId) {
         this.lavacarId = lavacarId;
     }
-    public void setLavacarModel(LavacarModel lavacar) {
-    }
-    public LavacarModel getLavacarModel() {
-        return null;
-    }
+
     
 }
 

@@ -32,6 +32,9 @@ public class ServicoService {
     @Autowired
     LavacarRepository lavacarRepository;
 
+    @Autowired
+    LavaCarService lavaCarService;
+
     public ServicoModel createServico(ServicoModel servico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         LavacarModel lavacar = lavacarRepository.findByEmail(username);
@@ -41,40 +44,26 @@ public class ServicoService {
     }
 
     public ResponseEntity<ServicoModel> updateServico(Integer id, ServicoModel newServico) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        LavacarModel lavacar = lavacarRepository.findByEmail(username);
-        UserSS user = UserService.authenticated();
-        if (user == null || (!id.equals(lavacar.getId()))) {
-            throw new AuthorizationException("Acesso negado");
-        }
         Optional<ServicoModel> servicoOptional = servicoRepository.findById(id);
         if (servicoOptional.isPresent()) {
             ServicoModel servico = servicoOptional.get();
+            UserSS user = UserService.authenticated();
+            System.out.println("id lavacar" + user.getId());
+            System.out.println("servico" + id);
+            if (user == null || !user.getId().equals(servico.getLavacarId())) {
+                throw new AuthorizationException("Acesso negado");
+            }
+            // ServicoModel servico = servicoOptional.get();
             servico.setNome(newServico.getNome());
             servico.setValor(newServico.getValor());
             servico.setTamCarro(newServico.getTamCarro());
             servico.setTempServico(newServico.getTempServico());
             servico.setAtivo(newServico.isAtivo());
-
+            // Salve as mudanças no serviço
             ServicoModel servicoUpdate = servicoRepository.save(servico);
             return ResponseEntity.ok().body(servicoUpdate);
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
-
-    public Page<ServicoModel> findPage(Integer page, Integer linesPerPage, String direction){
-        UserSS user = UserService.authenticated();
-		if (user == null) {
-			throw new AuthorizationException("Acesso negado");
-		}
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction));
-        LavacarModel lavaCar = lavacarRepository.findOne(user.getId());
-        return servicoRepository.findByLavaCar(lavaCar, pageRequest);
-    }
-    
-
-    
-
 }

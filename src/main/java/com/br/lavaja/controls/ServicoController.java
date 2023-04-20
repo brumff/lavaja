@@ -55,13 +55,5 @@ public class ServicoController {
         return servicoService.updateServico(id, newServico);
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ServicoModel>> findPage(
-        @RequestParam(value="page", defaultValue = "0") Integer page,
-        @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-        @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-            Page<ServicoModel> list = servicoService.findPage(page, linesPerPage, direction);
-            return ResponseEntity.ok().body(list);
-        }
 
 }

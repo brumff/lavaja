@@ -17,8 +17,6 @@ public interface ServicoRepository extends JpaRepository <ServicoModel, Integer>
     
     Optional<ServicoModel> findById(Integer id);
 
-    @Transactional(readOnly=true)
-    Page<ServicoModel> findByLavaCar(LavacarModel lavacarModel, Pageable pageRequest);
-    @Transactional(readOnly=true)
-    Page<ServicoModel> findByLavaCar(LavacarModel lavaCar, PageRequest pageRequest);
+    Optional<ServicoModel> findByLavacarIdAndId(Integer lavacarId, Integer id);
+
 }

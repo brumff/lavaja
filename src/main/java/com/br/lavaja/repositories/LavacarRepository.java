@@ -18,6 +18,5 @@ public interface LavacarRepository extends JpaRepository<LavacarModel, Integer> 
     @Query("SELECT l.id FROM LavacarModel l WHERE l.email = :email")
     Integer findIdByEmail(@Param("email") String email);
 
-    LavacarModel findOne(Integer id);
 
 }

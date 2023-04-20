@@ -81,16 +81,18 @@ public class LavaCarService {
         }
     }
 
-
-    /*public LavacarModel find(Integer id){
+    public LavacarModel find(Integer id) {
+		
 		UserSS user = UserService.authenticated();
 		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
 		}
 		
 		Optional<LavacarModel> obj = lavacarRepository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
-    }*/
+		return obj.orElseThrow(() -> new ObjectNotFoundException(id, null));
+	}
+
+
+
     
 }
