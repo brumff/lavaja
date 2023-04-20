@@ -24,9 +24,7 @@ public class ServicoModel {
     @NotEmpty(message = "Tempo serviço é obrigatório")
     private float tempServico;
     private boolean ativo;
-    @ManyToOne
-    @JoinColumn(name = "lavacar_id", referencedColumnName = "id")
-    private LavacarModel lavacarModel;
+    private Integer lavacarId;
     public Integer getId() {
         return id;
     }
@@ -63,11 +61,18 @@ public class ServicoModel {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+    public Integer getLavacarId() {
+        return lavacarId;
+    }
+    public void setLavacarId(Integer lavacarId) {
+        this.lavacarId = lavacarId;
+    }
+    public void setLavacarModel(LavacarModel lavacar) {
+    }
     public LavacarModel getLavacarModel() {
-        return lavacarModel;
+        return null;
     }
-    public void setLavacarModel(LavacarModel lavacarModel) {
-        this.lavacarModel = lavacarModel;
-    }
-
+    
 }
+
+

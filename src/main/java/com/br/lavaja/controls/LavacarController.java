@@ -46,12 +46,14 @@ public class LavacarController {
     public ResponseEntity<List<LavacarModel>> getAllLavacar() {
         return ResponseEntity.status(HttpStatus.OK).body(lavacarRepository.findAll());
     }
+
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/{id}")
     public LavacarModel getLavacar(@PathVariable Integer id) {
         
         return this.lavacarRepository.findById(id).get();
     }
+    
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
