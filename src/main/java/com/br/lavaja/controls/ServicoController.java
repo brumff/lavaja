@@ -39,21 +39,25 @@ public class ServicoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ServicoModel>> getAllLavacar() {
+    public ResponseEntity<List<ServicoModel>> getAllServicos() {
         return ResponseEntity.status(HttpStatus.OK).body(servicoRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public ServicoModel getLavacar(@PathVariable Integer id) {
-        
+    public ServicoModel getServico(@PathVariable Integer id) {
         return this.servicoRepository.findById(id).get();
     }
 
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
-    public ResponseEntity<ServicoModel> putLavacar(@RequestBody ServicoModel newServico, @PathVariable Integer id) {
+    public ResponseEntity<ServicoModel> putServico(@RequestBody ServicoModel newServico, @PathVariable Integer id) {
         return servicoService.updateServico(id, newServico);
     }
-
+    
+    @GetMapping("/ativos")
+    public List<ServicoModel> getServicosAtivos() {
+        boolean ativo = true;
+        return this.servicoRepository.buscarServicosAtivos(true);
+    }
 
 }
