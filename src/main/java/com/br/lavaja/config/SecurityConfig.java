@@ -34,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTUtil jwtUtil;
 
     public static final String[] PUBLIC_MATCHERS = {
-            "/api/v1/lavacar"
+            "/api/v1/lavacar",
+            "/api/v1/servico/ativos"
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {
@@ -46,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests()
-                .antMatchers(null, PUBLIC_MATCHERS).permitAll()
+                .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .anyRequest().authenticated();
                 http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
