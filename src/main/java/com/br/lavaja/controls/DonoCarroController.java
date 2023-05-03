@@ -35,20 +35,20 @@ public class DonoCarroController {
     }
 
     @PreAuthorize("hasAnyRole('DONOCARRO')")
-    @GetMapping("/{id}")
-    public DonoCarroModel getDonoCarro(@PathVariable Integer id) {
+    @GetMapping("/")
+    public DonoCarroModel getDonoCarro() {
         UserSS user = UserService.authenticated();
-        if(user == null || !id.equals(user.getId())) {
+        /*if(user == null || !id.equals(user.getId())) {
             throw new AuthorizationException("Acesso negado");
-        }
-        return this.donoCarroRepository.findById(id).get();
+        }*/
+        return this.donoCarroRepository.findById(user.getId()).get();
     }
 
     @PreAuthorize("hasAnyRole('DONOCARRO')")
-    @PutMapping("/{id}")
-    public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro,
-            @PathVariable Integer id) {
-                return donoCarroService.updateDonoCarro(id, newDonoCarro);
+    @PutMapping("/")
+    public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro
+           ) {
+                return donoCarroService.updateDonoCarro(newDonoCarro);
     }
 
 }
