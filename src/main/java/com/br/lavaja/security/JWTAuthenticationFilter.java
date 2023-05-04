@@ -2,12 +2,15 @@ package com.br.lavaja.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialException;
+
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,6 +60,23 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = jwtUtil.generateToken(username);
         res.addHeader("Authorization", "Bearer " + token);
         res.addHeader("access-control-expose-headers", "Authorization");
+
+		 // Obtém o usuário autenticado
+		 UserSS user = (UserSS) auth.getPrincipal();
+
+		 // Monta o objeto com as informações do usuário
+		 Map<String, Object> userMap = new HashMap<>();
+		 userMap.put("id", user.getId());
+		 userMap.put("email", user.getUsername());
+		 userMap.put("perfil", user.getAuthorities());
+	 
+		 // Converte o objeto em JSON e adiciona ao corpo da resposta
+		 ObjectMapper objectMapper = new ObjectMapper();
+		 String json = objectMapper.writeValueAsString(userMap);
+		 res.setContentType("application/json");
+		 res.setCharacterEncoding("UTF-8");
+		 res.getWriter().write(json);
+		 res.getWriter().flush();
 	}
 }
 
