@@ -58,7 +58,6 @@ public class LavacarModel{
     private String senha;
     //@JsonIgnore
     private String confSenha;
-    private Boolean ativo;
 
     @Enumerated(EnumType.STRING)
     private Perfil perfis;
@@ -158,13 +157,7 @@ public class LavacarModel{
     public void setConfSenha(String confSenha) {
         this.confSenha = confSenha;
     }
-    public Boolean getAtivo() {
-        return ativo;
-    }
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-
+    
     public Perfil getPerfis (){
         return this.perfis;
     }

@@ -48,16 +48,16 @@ public class LavacarController {
     }
 
     @PreAuthorize("hasAnyRole('LAVACAR')")
-    @GetMapping("/{id}")
-    public LavacarModel getLavacar(@PathVariable Integer id) {
-        
-        return this.lavacarRepository.findById(id).get();
+    @GetMapping("/")
+    public LavacarModel getLavacar() {
+         UserSS user = UserService.authenticated();
+        return this.lavacarRepository.findById(user.getId()).get();
     }
     
     @PreAuthorize("hasAnyRole('LAVACAR')")
-    @PutMapping("/{id}")
-    public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar, @PathVariable Integer id) {
-        return lavaCarService.updateLavacar(id, newLavacar);
+    @PutMapping("/")
+    public ResponseEntity<LavacarModel> putLavacar(@RequestBody LavacarModel newLavacar) {
+        return lavaCarService.updateLavacar(newLavacar);
     }
 
     @PreAuthorize("hasAnyRole('LAVACAR')")

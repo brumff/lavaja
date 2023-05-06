@@ -39,9 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {
-        "/api/v1/lavacar",
-        "/api/v1/donocarro"
-};
+            "/api/v1/lavacar",
+            "/api/v1/donocarro"
+    };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,10 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
                 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                .antMatchers("/api/lava-car/**").hasAuthority("ROLE_LAVACAR")
+                .antMatchers("/api/dono-carro/**").hasAuthority("ROLE_DONOCARRO")
                 .anyRequest().authenticated();
-                http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-                http.addFilter((Filter) new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
-                http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter((Filter) new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
@@ -69,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

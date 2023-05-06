@@ -1,6 +1,5 @@
 package com.br.lavaja.services;
 
-
 import java.util.Optional;
 
 import org.hibernate.ObjectNotFoundException;
@@ -44,11 +43,14 @@ public class LavaCarService {
 
     }
 
-    public ResponseEntity<LavacarModel> updateLavacar(Integer id, LavacarModel newLavacar) {
+    public ResponseEntity<LavacarModel> updateLavacar(LavacarModel newLavacar) {
         UserSS user = UserService.authenticated();
-        if (user == null || (!id.equals(user.getId()))) {
-            throw new AuthorizationException("Acesso negado");
-        }
+        /*
+         * if (user == null || (!id.equals(user.getId()))) {
+         * throw new AuthorizationException("Acesso negado");
+         * }
+         */
+        Integer id = user.getId();
         Optional<LavacarModel> lavacarOptional = lavacarRepository.findById(id);
         if (lavacarOptional.isPresent()) {
             LavacarModel lavacar = lavacarOptional.get();
@@ -62,16 +64,17 @@ public class LavaCarService {
             lavacar.setCep(newLavacar.getCep());
             lavacar.setTelefone1(newLavacar.getTelefone1());
             lavacar.setTelefone2(newLavacar.getTelefone2());
-            if (!lavacar.getEmail().equals(newLavacar.getEmail())) {
+            /*if (!lavacar.getEmail().equals(newLavacar.getEmail())) {
                 LavacarModel existeLavacar = lavacarRepository.findByEmail(newLavacar.getEmail());
                 if (existeLavacar != null) {
                     throw new DataIntegrityException("E-mail já cadastrado para outro usuário.");
                 }
-            }
+            }*/
             lavacar.setEmail(newLavacar.getEmail());
-            lavacar.setSenha(passwordEncoder().encode(newLavacar.getSenha()));
-            lavacar.setConfSenha(passwordEncoder().encode(newLavacar.getConfSenha()));
-            lavacar.setAtivo(newLavacar.getAtivo());
+            /*
+             * lavacar.setSenha(passwordEncoder().encode(newLavacar.getSenha()));
+             * lavacar.setConfSenha(passwordEncoder().encode(newLavacar.getConfSenha()));
+             */
 
             LavacarModel lavacarUpdate = lavacarRepository.save(lavacar);
 
@@ -82,17 +85,14 @@ public class LavaCarService {
     }
 
     public LavacarModel find(Integer id) {
-		
-		UserSS user = UserService.authenticated();
-		if (user==null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
-			throw new AuthorizationException("Acesso negado");
-		}
-		
-		Optional<LavacarModel> obj = lavacarRepository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException(id, null));
-	}
 
+        UserSS user = UserService.authenticated();
+        if (user == null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
 
+        Optional<LavacarModel> obj = lavacarRepository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException(id, null));
+    }
 
-    
 }
