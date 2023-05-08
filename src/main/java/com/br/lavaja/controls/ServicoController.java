@@ -47,7 +47,7 @@ public class ServicoController {
     public ServicoModel getServico(@PathVariable Integer id) {
         return this.servicoRepository.findById(id).get();
     }
-
+    //mudar
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<ServicoModel> putServico(@RequestBody ServicoModel newServico, @PathVariable Integer id) {
@@ -60,4 +60,9 @@ public class ServicoController {
         return this.servicoRepository.buscarServicosAtivos(true);
     }
 
+    @GetMapping("/meus-servicos")
+    public ResponseEntity<List<ServicoModel>> getListarServicosLavacar() {
+        List<ServicoModel> servicos = servicoService.listaServicoLavacar();
+        return ResponseEntity.ok(servicos);
+    }
 }

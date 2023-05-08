@@ -66,17 +66,4 @@ public class LavacarController {
         this.lavacarRepository.deleteById(id);
     }
 
-   /* @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        String email = loginRequest.getEmail();
-        String senha = loginRequest.getSenha();
-
-        LavacarModel lavacar = lavacarRepository.findByEmail(email);
-
-       // if (lavacar == null || !lavacar.getSenha().equals(senha)) {
-         //   return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        //}
-
-        return ResponseEntity.ok().build();
-    } */
 }

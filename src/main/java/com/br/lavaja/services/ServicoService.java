@@ -1,6 +1,7 @@
 package com.br.lavaja.services;
 
 import java.security.SignatureException;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.catalina.connector.Response;
@@ -65,5 +66,12 @@ public class ServicoService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public List<ServicoModel> listaServicoLavacar() {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavacar = lavacarRepository.findById(user.getId()).orElseThrow(() -> new AuthorizationException("Acesso negado"));
+    
+        return servicoRepository.findByLavacarId(lavacar.getId());
     }
 }
