@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.br.lavaja.dto.LavacarDTO;
 import com.br.lavaja.enums.Perfil;
 import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.exceptions.DataIntegrityException;
@@ -43,7 +44,7 @@ public class LavaCarService {
 
     }
 
-    public ResponseEntity<LavacarModel> updateLavacar(LavacarModel newLavacar) {
+    public ResponseEntity<LavacarDTO> updateLavacar(LavacarModel newLavacar) {
         UserSS user = UserService.authenticated();
         /*
          * if (user == null || (!id.equals(user.getId()))) {
@@ -64,21 +65,22 @@ public class LavaCarService {
             lavacar.setCep(newLavacar.getCep());
             lavacar.setTelefone1(newLavacar.getTelefone1());
             lavacar.setTelefone2(newLavacar.getTelefone2());
-            /*if (!lavacar.getEmail().equals(newLavacar.getEmail())) {
-                LavacarModel existeLavacar = lavacarRepository.findByEmail(newLavacar.getEmail());
-                if (existeLavacar != null) {
-                    throw new DataIntegrityException("E-mail já cadastrado para outro usuário.");
-                }
-            }*/
+            /*
+             * if (!lavacar.getEmail().equals(newLavacar.getEmail())) {
+             * LavacarModel existeLavacar =
+             * lavacarRepository.findByEmail(newLavacar.getEmail());
+             * if (existeLavacar != null) {
+             * throw new DataIntegrityException("E-mail já cadastrado para outro usuário.");
+             * }
+             * }
+             */
             lavacar.setEmail(newLavacar.getEmail());
             /*
              * lavacar.setSenha(passwordEncoder().encode(newLavacar.getSenha()));
              * lavacar.setConfSenha(passwordEncoder().encode(newLavacar.getConfSenha()));
              */
 
-            LavacarModel lavacarUpdate = lavacarRepository.save(lavacar);
-
-            return ResponseEntity.ok().body(lavacarUpdate);
+            return ResponseEntity.ok().body(new LavacarDTO(lavacarRepository.save(lavacar)));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -93,6 +95,20 @@ public class LavaCarService {
 
         Optional<LavacarModel> obj = lavacarRepository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(id, null));
+    }
+
+    public LavacarDTO abrirLavacar(Boolean aberto) {
+        UserSS user = UserService.authenticated();
+        Integer id = user.getId();
+        Optional<LavacarModel> lavacarOptional = lavacarRepository.findById(id);
+        if (lavacarOptional.isPresent()) {
+            LavacarModel lavacar = lavacarOptional.get();
+            lavacar.setAberto(aberto);
+            return new LavacarDTO(lavacarRepository.save(lavacar), "aberto");
+        } else {
+            throw new RuntimeException("Lavacar não encontrado");
+        }
+
     }
 
 }
