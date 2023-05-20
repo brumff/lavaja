@@ -2,11 +2,14 @@ package com.br.lavaja.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
@@ -36,20 +39,34 @@ public class ContratarServicoService {
         return createContratoServico;
     }
 
-    public List<ContratarServicoModel> listarServicosDonoCarroLogado() {
+    public List<ContratarServicoDTO> listarServicosDonoCarroLogado() {
         UserSS user = UserService.authenticated();
         DonoCarroModel donoCarro = donoCarroRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
 
-        return contratarServicoRepository.findByDonoCarro(donoCarro);
+        return contratarServicoRepository.findByDonoCarro(donoCarro).stream().map(ContratarServicoModel::converter)
+                .collect(Collectors.toList());
     }
 
-    public List<ContratarServicoModel> listarServicosLavaCarLogado() {
+    public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
 
-        return contratarServicoRepository.findByLavacar(lavaCar);
+        return contratarServicoRepository.findByLavacar(lavaCar).stream().map(ContratarServicoModel::converter)
+                .collect(Collectors.toList());
+    }
+
+    public void softDeleted(ContratarServicoModel contratarServico) {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+        contratarServico.setDeleted(true);
+        contratarServicoRepository.save(contratarServico);
+    }
+
+    public ContratarServicoModel findById(Integer id) {
+        return contratarServicoRepository.findById(id).orElse(null);
     }
 
 }

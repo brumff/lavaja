@@ -18,4 +18,6 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
     @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s")
     List<ContratarServicoModel> findByLavacar(LavacarModel lavacar);
 
+    List<ContratarServicoModel> findByDeletedFalse();
+
 }

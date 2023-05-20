@@ -6,13 +6,14 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
 
+import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
 
 public class ContratarServicoDTO {
 
     private Integer id;
-    private String origem;
+    private Origem origem;
     private StatusServico statusServico;
     private Date dataServico;
     private Integer donoCarroId;
@@ -39,11 +40,11 @@ public class ContratarServicoDTO {
         this.id = id;
     }
 
-    public String getOrigem() {
+    public Origem getOrigem() {
         return origem;
     }
 
-    public void setOrigem(String origem) {
+    public void setOrigem(Origem origem) {
         this.origem = origem;
     }
 

@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,7 @@ public class ContratarServicoController {
     @PreAuthorize("hasAnyRole('DONOCARRO')")
     @GetMapping("/donocarro-servicos")
     public ResponseEntity<List<?>> getListarServicosDonoCarro() {
-        List<ContratarServicoModel> servicos = contratarServicoService.listarServicosDonoCarroLogado();
+        List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosDonoCarroLogado();
         return ResponseEntity.ok(servicos);
     }
 
@@ -42,9 +44,19 @@ public class ContratarServicoController {
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/lavacar-servicos")
     public ResponseEntity<List<?>> getListarServicosLavacar() {
-        List<ContratarServicoModel> servicos = contratarServicoService.listarServicosLavaCarLogado();
+        List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosLavaCarLogado();
         return ResponseEntity.ok(servicos);
     }
 
-    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> softDeleted(@PathVariable Integer id) {
+        ContratarServicoModel contratarServicoModel = contratarServicoService.findById(id);
+
+        if (contratarServicoModel == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        contratarServicoService.softDeleted(contratarServicoModel);
+        return ResponseEntity.ok("Objeto excluído com sucesso");
+    }
 }
