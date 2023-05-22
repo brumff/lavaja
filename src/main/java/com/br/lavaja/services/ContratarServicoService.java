@@ -61,6 +61,7 @@ public class ContratarServicoService {
         var modelList = new ArrayList<ContratarServicoDTO>();
         for (var entity : list) {
             var index = list.indexOf(entity);
+            System.out.println(entity);
             var model = entity.converter();
             model.setTempFila(calcularFila(index, list));
             modelList.add(model);
@@ -80,29 +81,32 @@ public class ContratarServicoService {
         return contratarServicoRepository.findById(id).orElse(null);
     }
 
-    /*
-     * public ResponseEntity<ContratarServicoDTO> updateContratarServivo (Integer
-     * id, ContratarServicoModel newContratarServico){
-     * Optional<ContratarServicoModel> contratarServicoOptional =
-     * contratarServicoRepository.findById(id);
-     * if(contratarServicoOptional.isPresent()) {
-     * ContratarServicoModel contratarServico = contratarServicoOptional.get();
-     * UserSS user = UserService.authenticated();
-     * if (user == null || !user.getId().equals(contratarServico.findByLavacar())) {
-     * throw new AuthorizationException("Acesso negado");
-     * }
-     * }
-     * 
-     * }
-     */
+    public ResponseEntity<ContratarServicoModel> updateContratarServivo(Integer id,
+            ContratarServicoModel newContratarServico) {
+        Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
+        if (contratarServicoOptional.isPresent()) {
+            ContratarServicoModel contratarServico = contratarServicoOptional.get();
+            UserSS user = UserService.authenticated();
+            if (user == null || !user.getId().equals(contratarServico.getServico().getLavacarId())) {
+                throw new AuthorizationException("Acesso negado");
+            }
+            contratarServico.setStatusServico(newContratarServico.getStatusServico());
 
-     public float calcularFila(int index, List<ContratarServicoModel> list) {
+            ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
+            return ResponseEntity.ok().body(contratarServicoUpdate);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    public float calcularFila(int index, List<ContratarServicoModel> list) {
         float tempoTotal = 0;
-       // verifica o tempo de serviço e adiciona na variavel tempo total
-       var objetosNaFrente = list.subList(index + 1, list.size());
-       for(var model : objetosNaFrente){
-           tempoTotal += model.getServico().getTempServico();
-       }
-       return tempoTotal;
-   }
+        // verifica o tempo de serviço e adiciona na variavel tempo total
+        var objetosNaFrente = list.subList(index + 1, list.size());
+        for (var model : objetosNaFrente) {
+            tempoTotal += model.getServico().getTempServico();
+        }
+        return tempoTotal;
+    }
 }

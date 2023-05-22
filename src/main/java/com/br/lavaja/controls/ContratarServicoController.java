@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,11 +61,10 @@ public class ContratarServicoController {
         return ResponseEntity.ok("Objeto excluído com sucesso");
     }
 
-    /*@GetMapping("/nao-finalizados")
-    public ResponseEntity<List<?>> getListarNaoFinalizados() {
-        List<ContratarServicoModel> servicos = contratarServicoRepository.findServicosNaoFinalizados();
-        return ResponseEntity.ok(servicos);
-    }*/
+    @PatchMapping("/{id}")
+    public ResponseEntity<ContratarServicoModel> patchContratarServico(@RequestBody ContratarServicoModel newServico, @PathVariable Integer id) {
+        return contratarServicoService.updateContratarServivo(id, newServico);
+    }
 
 
 }
