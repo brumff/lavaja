@@ -59,4 +59,16 @@ public class ContratarServicoController {
         contratarServicoService.softDeleted(contratarServicoModel);
         return ResponseEntity.ok("Objeto excluído com sucesso");
     }
+
+    @GetMapping("/nao-finalizados")
+    public ResponseEntity<List<?>> getListarNaoFinalizados() {
+        List<ContratarServicoModel> servicos = contratarServicoRepository.findServicosNaoFinalizados();
+        return ResponseEntity.ok(servicos);
+    }
+
+    @GetMapping("/fila/{id}")
+    public ResponseEntity<ContratarServicoModel> getfila(@PathVariable Integer id) {
+        ContratarServicoModel servico = contratarServicoService.calcularFila(id);
+    return ResponseEntity.ok(servico);
+    }
 }

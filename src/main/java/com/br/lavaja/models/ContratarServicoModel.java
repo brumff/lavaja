@@ -1,6 +1,9 @@
 package com.br.lavaja.models;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +19,7 @@ import javax.persistence.Table;
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "contratarservico")
@@ -29,23 +33,18 @@ public class ContratarServicoModel {
     @Enumerated(EnumType.STRING)
     @Column(name = "status_servico")
     private StatusServico statusServico;
-    private Date dataServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataServico;
     @ManyToOne
     @JoinColumn(name = "donocarro_id", referencedColumnName = "id")
     private DonoCarroModel donoCarro;
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
+    private Duration tempFila;
     private boolean deleted;
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
+  
     public Integer getId() {
         return id;
     }
@@ -70,11 +69,11 @@ public class ContratarServicoModel {
         this.statusServico = statusServico;
     }
 
-    public Date getDataServico() {
+    public LocalDateTime getDataServico() {
         return dataServico;
     }
 
-    public void setDataServico(Date dataServico) {
+    public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
     }
 
@@ -94,7 +93,29 @@ public class ContratarServicoModel {
         this.servico = servico;
     }
 
+    public Duration getTempFila() {
+        return tempFila;
+    }
+
+    public void setTempFila(Duration tempFila) {
+        this.tempFila = tempFila;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public ContratarServicoDTO converter() {
         return new ContratarServicoDTO(this);
     }
+
+    public ContratarServicoModel() {
+        this.dataServico = LocalDateTime.now();
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.br.lavaja.dto;
 
-
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,15 +10,20 @@ import javax.persistence.Enumerated;
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+
 
 public class ContratarServicoDTO {
 
     private Integer id;
     private Origem origem;
     private StatusServico statusServico;
-    private Date dataServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataServico;
     private Integer donoCarroId;
     private Integer servicoId;
+    private Duration tempFila;
 
     public ContratarServicoDTO(ContratarServicoModel contratarServico) {
         this.id = contratarServico.getId();
@@ -26,6 +32,7 @@ public class ContratarServicoDTO {
         this.dataServico = contratarServico.getDataServico();
         this.donoCarroId = contratarServico.getDonoCarro().getId();
         this.servicoId = contratarServico.getServico().getId();
+        this.tempFila = contratarServico.getTempFila();
     }
 
     public ContratarServicoDTO() {
@@ -56,11 +63,11 @@ public class ContratarServicoDTO {
         this.statusServico = statusServico;
     }
 
-    public Date getDataServico() {
+    public LocalDateTime getDataServico() {
         return dataServico;
     }
 
-    public void setDataServico(Date dataServico) {
+    public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
     }
 
@@ -79,4 +86,13 @@ public class ContratarServicoDTO {
     public void setServicoId(Integer servicoId) {
         this.servicoId = servicoId;
     }
+
+    public Duration getTempFila() {
+        return tempFila;
+    }
+
+    public void setTempFila(Duration tempFila) {
+        this.tempFila = tempFila;
+    }
+
 }

@@ -1,11 +1,14 @@
 package com.br.lavaja.services;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -14,6 +17,7 @@ import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
+import com.br.lavaja.models.ServicoModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
@@ -69,4 +73,29 @@ public class ContratarServicoService {
         return contratarServicoRepository.findById(id).orElse(null);
     }
 
+    /*
+     * public ResponseEntity<ContratarServicoDTO> updateContratarServivo (Integer
+     * id, ContratarServicoModel newContratarServico){
+     * Optional<ContratarServicoModel> contratarServicoOptional =
+     * contratarServicoRepository.findById(id);
+     * if(contratarServicoOptional.isPresent()) {
+     * ContratarServicoModel contratarServico = contratarServicoOptional.get();
+     * UserSS user = UserService.authenticated();
+     * if (user == null || !user.getId().equals(contratarServico.findByLavacar())) {
+     * throw new AuthorizationException("Acesso negado");
+     * }
+     * }
+     * 
+     * }
+     */
+
+     public ContratarServicoModel calcularFila(Integer id) {
+        ContratarServicoModel contratarServico = contratarServicoRepository.getById(id);
+    
+        LocalDateTime horaContratacao = contratarServico.getDataServico();
+        System.out.println(horaContratacao);
+        Duration tempoEsperaTotal = Duration.ZERO;
+    
+        return contratarServico;
+    }
 }
