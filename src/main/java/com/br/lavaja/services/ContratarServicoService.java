@@ -2,6 +2,7 @@ package com.br.lavaja.services;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -56,14 +57,15 @@ public class ContratarServicoService {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-
-        var list = contratarServicoRepository.findByLavacar(lavaCar).stream().map(ContratarServicoModel::converter)
-                .collect(Collectors.toList());
-        for (var model : list) {
-            model.setTempFila(calcularFila(lavaCar.getId()));
+        var list = contratarServicoRepository.findByLavacar(lavaCar);
+        var modelList = new ArrayList<ContratarServicoDTO>();
+        for (var entity : list) {
+            var index = list.indexOf(entity);
+            var model = entity.converter();
+            model.setTempFila(calcularFila(index, list));
+            modelList.add(model);
         }
-        return list;
-
+        return modelList;
     }
 
     public void softDeleted(ContratarServicoModel contratarServico) {
@@ -94,19 +96,13 @@ public class ContratarServicoService {
      * }
      */
 
-    public float calcularFila(Integer lavacarId) {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+     public float calcularFila(int index, List<ContratarServicoModel> list) {
         float tempoTotal = 0;
-        // todos os serviços diferentes de finalizado, com id do lavacar logado
-        List<ContratarServicoModel> list = contratarServicoRepository.findServicosNaoFinalizados(lavacarId);
-        // verifica o tempo de serviço e adiciona na variavel tempo total
-        for (var entity : list) {
-            var tempo = entity.getServico().getTempServico();
-            tempoTotal += tempo;
-        }
-
-        return tempoTotal;
-    }
+       // verifica o tempo de serviço e adiciona na variavel tempo total
+       var objetosNaFrente = list.subList(index + 1, list.size());
+       for(var model : objetosNaFrente){
+           tempoTotal += model.getServico().getTempServico();
+       }
+       return tempoTotal;
+   }
 }
