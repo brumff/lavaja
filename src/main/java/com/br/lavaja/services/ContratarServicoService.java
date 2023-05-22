@@ -57,8 +57,13 @@ public class ContratarServicoService {
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
 
-        return contratarServicoRepository.findByLavacar(lavaCar).stream().map(ContratarServicoModel::converter)
+        var list = contratarServicoRepository.findByLavacar(lavaCar).stream().map(ContratarServicoModel::converter)
                 .collect(Collectors.toList());
+        for (var model : list) {
+            model.setTempFila(calcularFila(lavaCar.getId()));
+        }
+        return list;
+
     }
 
     public void softDeleted(ContratarServicoModel contratarServico) {
@@ -89,13 +94,19 @@ public class ContratarServicoService {
      * }
      */
 
-     public ContratarServicoModel calcularFila(Integer id) {
-        ContratarServicoModel contratarServico = contratarServicoRepository.getById(id);
-    
-        LocalDateTime horaContratacao = contratarServico.getDataServico();
-        System.out.println(horaContratacao);
-        Duration tempoEsperaTotal = Duration.ZERO;
-    
-        return contratarServico;
+    public float calcularFila(Integer lavacarId) {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+        float tempoTotal = 0;
+        // todos os serviços diferentes de finalizado, com id do lavacar logado
+        List<ContratarServicoModel> list = contratarServicoRepository.findServicosNaoFinalizados(lavacarId);
+        // verifica o tempo de serviço e adiciona na variavel tempo total
+        for (var entity : list) {
+            var tempo = entity.getServico().getTempServico();
+            tempoTotal += tempo;
+        }
+
+        return tempoTotal;
     }
 }

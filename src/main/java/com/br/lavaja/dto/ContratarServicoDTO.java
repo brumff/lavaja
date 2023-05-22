@@ -23,7 +23,7 @@ public class ContratarServicoDTO {
     private LocalDateTime dataServico;
     private Integer donoCarroId;
     private Integer servicoId;
-    private Duration tempFila;
+    private float tempFila;
 
     public ContratarServicoDTO(ContratarServicoModel contratarServico) {
         this.id = contratarServico.getId();
@@ -87,11 +87,11 @@ public class ContratarServicoDTO {
         this.servicoId = servicoId;
     }
 
-    public Duration getTempFila() {
+    public float getTempFila() {
         return tempFila;
     }
 
-    public void setTempFila(Duration tempFila) {
+    public void setTempFila(float tempFila) {
         this.tempFila = tempFila;
     }
 

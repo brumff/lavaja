@@ -20,6 +20,7 @@ import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers.FloatSerializer;
 
 @Entity
 @Table(name = "contratarservico")
@@ -41,7 +42,7 @@ public class ContratarServicoModel {
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
-    private Duration tempFila;
+    private float tempFila;
     private boolean deleted;
 
   
@@ -93,11 +94,11 @@ public class ContratarServicoModel {
         this.servico = servico;
     }
 
-    public Duration getTempFila() {
+    public float getTempFila() {
         return tempFila;
     }
 
-    public void setTempFila(Duration tempFila) {
+    public void setTempFila(float tempFila) {
         this.tempFila = tempFila;
     }
 

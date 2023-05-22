@@ -21,6 +21,6 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
 
     List<ContratarServicoModel> findByDeletedFalse();
 
-    @Query("SELECT c FROM ContratarServicoModel c WHERE c.statusServico <> 'FINALIZADO'")
-    List<ContratarServicoModel> findServicosNaoFinalizados();
+    @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.statusServico <> 'FINALIZADO' AND s.lavacar_id = :lavacarid")
+    List<ContratarServicoModel> findServicosNaoFinalizados(int lavacarid);
 }
