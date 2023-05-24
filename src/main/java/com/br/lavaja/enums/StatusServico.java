@@ -2,7 +2,7 @@ package com.br.lavaja.enums;
 
 public enum StatusServico {
     AGUARDANDO,
-    EM_LAVAGAEM,
+    EM_LAVAGEM,
     FINALIZADO,
     CANCELADO
     

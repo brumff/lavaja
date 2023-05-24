@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
+import com.br.lavaja.models.DonoCarroModel;
+import com.br.lavaja.models.ServicoModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
@@ -21,8 +23,8 @@ public class ContratarServicoDTO {
     private StatusServico statusServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataServico;
-    private Integer donoCarroId;
-    private Integer servicoId;
+    private DonoCarroModel donoCarroId;
+    private ServicoModel servicoId;
     private float tempFila;
 
     public ContratarServicoDTO(ContratarServicoModel contratarServico) {
@@ -30,8 +32,8 @@ public class ContratarServicoDTO {
         this.origem = contratarServico.getOrigem();
         this.statusServico = contratarServico.getStatusServico();
         this.dataServico = contratarServico.getDataServico();
-        this.donoCarroId = contratarServico.getDonoCarro().getId();
-        this.servicoId = contratarServico.getServico().getId();
+        this.donoCarroId = contratarServico.getDonoCarro();
+        this.servicoId = contratarServico.getServico();
         this.tempFila = contratarServico.getTempFila();
     }
 
@@ -71,19 +73,19 @@ public class ContratarServicoDTO {
         this.dataServico = dataServico;
     }
 
-    public Integer getDonoCarroId() {
+    public DonoCarroModel getDonoCarroId() {
         return donoCarroId;
     }
 
-    public void setDonoCarroId(Integer donoCarroId) {
+    public void setDonoCarroId(DonoCarroModel donoCarroId) {
         this.donoCarroId = donoCarroId;
     }
 
-    public Integer getServicoId() {
+    public ServicoModel getServicoId() {
         return servicoId;
     }
 
-    public void setServicoId(Integer servicoId) {
+    public void setServicoId(ServicoModel servicoId) {
         this.servicoId = servicoId;
     }
 
@@ -95,4 +97,8 @@ public class ContratarServicoDTO {
         this.tempFila = tempFila;
     }
 
+    public ContratarServicoModel converter() {
+        return new ContratarServicoModel(this);
+    }
 }
+

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
@@ -23,4 +24,8 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
 
     @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.statusServico != 'FINALIZADO' ")
     List<ContratarServicoModel> findServicosNaoFinalizados();
+
+    List<ContratarServicoModel> findByStatusServico(StatusServico statusServico);
+
 }
+

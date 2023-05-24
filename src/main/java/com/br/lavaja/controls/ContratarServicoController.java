@@ -3,6 +3,7 @@ package com.br.lavaja.controls;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,21 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
+import com.br.lavaja.schedules.ContagemRegressiva;
 import com.br.lavaja.services.ContratarServicoService;
 
 @RestController
 @RequestMapping("/api/v1/contratarservico")
 public class ContratarServicoController {
 
-    @Autowired 
+    @Autowired
     private ContratarServicoService contratarServicoService;
 
     @Autowired
     private ContratarServicoRepository contratarServicoRepository;
 
+    @Autowired
+    private ContagemRegressiva contagemRegressiva;
+
     @PostMapping
     public ContratarServicoDTO createDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
-        return  new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
+        return new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
     }
 
     @PreAuthorize("hasAnyRole('DONOCARRO')")
@@ -41,7 +46,6 @@ public class ContratarServicoController {
         return ResponseEntity.ok(servicos);
     }
 
-    
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/lavacar-servicos")
     public ResponseEntity<List<?>> getListarServicosLavacar() {
@@ -62,9 +66,15 @@ public class ContratarServicoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ContratarServicoModel> patchContratarServico(@RequestBody ContratarServicoModel newServico, @PathVariable Integer id) {
-        return contratarServicoService.updateContratarServivo(id, newServico);
+    public ResponseEntity<ContratarServicoModel> patchContratarServico(@RequestBody ContratarServicoModel newServico,
+            @PathVariable Integer id) {
+        return contratarServicoService.updateContratarServico(id, newServico);
     }
 
+    @GetMapping("fila")
+    public ResponseEntity<List<?>> getLista() {
+        List<ContratarServicoDTO> listaCarrosEmLavagem = contagemRegressiva.filaLavagem();
+        return ResponseEntity.ok(listaCarrosEmLavagem);
+    }
 
 }

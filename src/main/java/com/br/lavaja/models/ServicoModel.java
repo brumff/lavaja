@@ -24,18 +24,9 @@ public class ServicoModel {
     private Double valor;
     private String tamCarro;
     @NotEmpty(message = "Tempo serviço é obrigatório")
-    private float tempServico;
+    private Integer tempServico;
     private boolean ativo;
     private Integer lavacarId;
-    private float duracaoEmMinutos;
-
-    public float getDuracaoEmMinutos() {
-        return duracaoEmMinutos;
-    }
-
-    public void setDuracaoEmMinutos(float duracaoEmMinutos) {
-        this.duracaoEmMinutos = duracaoEmMinutos;
-    }
 
     public Integer getId() {
         return id;
@@ -69,11 +60,11 @@ public class ServicoModel {
         this.tamCarro = tamCarro;
     }
 
-    public float getTempServico() {
+    public Integer getTempServico() {
         return tempServico;
     }
 
-    public void setTempServico(float tempServico) {
+    public void setTempServico(Integer tempServico) {
         this.tempServico = tempServico;
     }
 
@@ -93,8 +84,4 @@ public class ServicoModel {
         this.lavacarId = lavacarId;
     }
 
-    public Duration getDuracao() {
-        long duracaoEmSegundos = (long) (duracaoEmMinutos * 60); // Converter minutos para segundos
-        return Duration.ofSeconds(duracaoEmSegundos); // Criar Duration com base nos segundos
-    }
 }

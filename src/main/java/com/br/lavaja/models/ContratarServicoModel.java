@@ -43,9 +43,19 @@ public class ContratarServicoModel {
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
     private float tempFila;
+    private int duracao;
+
+
+    public int getDuracao() {
+        return duracao;
+    }
+
+    public void setDuracao(int duracao) {
+        this.duracao = duracao;
+    }
+
     private boolean deleted;
 
-  
     public Integer getId() {
         return id;
     }
@@ -116,6 +126,16 @@ public class ContratarServicoModel {
 
     public ContratarServicoModel() {
         this.dataServico = LocalDateTime.now();
+    }
+
+    public ContratarServicoModel(ContratarServicoDTO dto) {
+        this.id = dto.getId();
+        this.origem = dto.getOrigem();
+        this.statusServico = dto.getStatusServico();
+        this.dataServico = dto.getDataServico();
+        this.donoCarro = dto.getDonoCarroId();
+        this.servico = dto.getServicoId();
+        this.tempFila = dto.getTempFila();
     }
 
 

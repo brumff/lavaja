@@ -66,6 +66,8 @@ public class ContratarServicoService {
             model.setTempFila(calcularFila(index, list));
             modelList.add(model);
         }
+        
+    
         return modelList;
     }
 
@@ -81,15 +83,15 @@ public class ContratarServicoService {
         return contratarServicoRepository.findById(id).orElse(null);
     }
 
-    public ResponseEntity<ContratarServicoModel> updateContratarServivo(Integer id,
+    public ResponseEntity<ContratarServicoModel> updateContratarServico(Integer id,
             ContratarServicoModel newContratarServico) {
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
-            UserSS user = UserService.authenticated();
+            /*UserSS user = UserService.authenticated();
             if (user == null || !user.getId().equals(contratarServico.getServico().getLavacarId())) {
                 throw new AuthorizationException("Acesso negado");
-            }
+            }*/
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
 
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
@@ -109,4 +111,5 @@ public class ContratarServicoService {
         }
         return tempoTotal;
     }
+
 }
