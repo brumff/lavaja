@@ -60,13 +60,12 @@ public class ContratarServicoService {
         var list = contratarServicoRepository.findByLavacar(lavaCar);
         var modelList = new ArrayList<ContratarServicoDTO>();
         for (var entity : list) {
-            var index = list.indexOf(entity);
-            System.out.println(entity);
-            var model = entity.converter();
-            model.setTempFila(calcularFila(index, list));
-            modelList.add(model);
+            if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
+                var model = entity.converter();
+                model.setTempFila(calcularFila(modelList.size(), list));
+                modelList.add(model);
+            }
         }
-        
     
         return modelList;
     }
@@ -88,10 +87,13 @@ public class ContratarServicoService {
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
-            /*UserSS user = UserService.authenticated();
-            if (user == null || !user.getId().equals(contratarServico.getServico().getLavacarId())) {
-                throw new AuthorizationException("Acesso negado");
-            }*/
+            /*
+             * UserSS user = UserService.authenticated();
+             * if (user == null ||
+             * !user.getId().equals(contratarServico.getServico().getLavacarId())) {
+             * throw new AuthorizationException("Acesso negado");
+             * }
+             */
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
 
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
@@ -103,13 +105,17 @@ public class ContratarServicoService {
     }
 
     public float calcularFila(int index, List<ContratarServicoModel> list) {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         float tempoTotal = 0;
         // verifica o tempo de serviço e adiciona na variavel tempo total
         var objetosNaFrente = list.subList(index + 1, list.size());
         for (var model : objetosNaFrente) {
-            tempoTotal += model.getServico().getTempServico();
+            if (model.getServico().getLavacarId().equals(lavaCar.getId())) {
+                tempoTotal += model.getServico().getTempServico();
+            }
         }
         return tempoTotal;
     }
-
 }
