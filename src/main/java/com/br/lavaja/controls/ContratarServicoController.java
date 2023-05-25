@@ -66,7 +66,7 @@ public class ContratarServicoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ContratarServicoModel> patchContratarServico(@RequestBody ContratarServicoModel newServico,
+    public ResponseEntity<ContratarServicoDTO> patchContratarServico(@RequestBody ContratarServicoModel newServico,
             @PathVariable Integer id) {
         return contratarServicoService.updateContratarServico(id, newServico);
     }

@@ -133,7 +133,7 @@ public class ContratarServicoModel {
         this.origem = dto.getOrigem();
         this.statusServico = dto.getStatusServico();
         this.dataServico = dto.getDataServico();
-        this.donoCarro = dto.getDonoCarroId();
+        this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId();
         this.tempFila = dto.getTempFila();
     }

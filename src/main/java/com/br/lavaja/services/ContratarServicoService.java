@@ -66,7 +66,7 @@ public class ContratarServicoService {
                 modelList.add(model);
             }
         }
-    
+
         return modelList;
     }
 
@@ -82,7 +82,7 @@ public class ContratarServicoService {
         return contratarServicoRepository.findById(id).orElse(null);
     }
 
-    public ResponseEntity<ContratarServicoModel> updateContratarServico(Integer id,
+    public ResponseEntity<ContratarServicoDTO> updateContratarServico(Integer id,
             ContratarServicoModel newContratarServico) {
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
@@ -97,7 +97,8 @@ public class ContratarServicoService {
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
 
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
-            return ResponseEntity.ok().body(contratarServicoUpdate);
+            ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
+            return ResponseEntity.ok().body(contratarServicoDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
