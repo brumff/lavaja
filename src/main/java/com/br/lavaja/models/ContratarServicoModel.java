@@ -42,17 +42,7 @@ public class ContratarServicoModel {
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
-    private float tempFila;
-    private int duracao;
-
-
-    public int getDuracao() {
-        return duracao;
-    }
-
-    public void setDuracao(int duracao) {
-        this.duracao = duracao;
-    }
+    private int tempFila;
 
     private boolean deleted;
 
@@ -104,11 +94,11 @@ public class ContratarServicoModel {
         this.servico = servico;
     }
 
-    public float getTempFila() {
+    public int getTempFila() {
         return tempFila;
     }
 
-    public void setTempFila(float tempFila) {
+    public void setTempFila(int tempFila) {
         this.tempFila = tempFila;
     }
 

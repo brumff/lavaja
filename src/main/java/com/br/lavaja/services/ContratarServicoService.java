@@ -3,6 +3,8 @@ package com.br.lavaja.services;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -66,6 +68,7 @@ public class ContratarServicoService {
                 modelList.add(model);
             }
         }
+        Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
 
         return modelList;
     }
@@ -87,13 +90,6 @@ public class ContratarServicoService {
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
-            /*
-             * UserSS user = UserService.authenticated();
-             * if (user == null ||
-             * !user.getId().equals(contratarServico.getServico().getLavacarId())) {
-             * throw new AuthorizationException("Acesso negado");
-             * }
-             */
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
 
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
@@ -105,11 +101,11 @@ public class ContratarServicoService {
 
     }
 
-    public float calcularFila(int index, List<ContratarServicoModel> list) {
+    public int calcularFila(int index, List<ContratarServicoModel> list) {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        float tempoTotal = 0;
+        int tempoTotal = 0;
         // verifica o tempo de serviço e adiciona na variavel tempo total
         var objetosNaFrente = list.subList(index + 1, list.size());
         for (var model : objetosNaFrente) {
