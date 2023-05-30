@@ -33,6 +33,7 @@ public class ContagemRegressiva {
             Thread.sleep(contratarServicoModel.getServico().getTempServico() * 6000);
             contratarServicoModel.setStatusServico(StatusServico.FINALIZADO);
             contratarServicoService.updateContratarServico(contratarServicoModel.getId(), contratarServicoModel);
+            System.out.println("finalizar");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -48,6 +49,7 @@ public class ContagemRegressiva {
             Thread thread = new Thread(
                     () -> regressivaLavagem(contratarServicoDTO.converter()));
             thread.start();
+           
         }
         return carrosEmLavagem;
     }

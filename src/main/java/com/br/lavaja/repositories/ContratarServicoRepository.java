@@ -31,5 +31,7 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
     @Query("SELECT cs FROM ContratarServicoModel cs INNER JOIN cs.servico s WHERE s.lavacarId = :lavacarId ORDER BY cs.deleted ASC")
     List<ContratarServicoModel> findByLavacarIdOrderByDeletedAsc(@Param("lavacarId") Integer lavacarId);
 
+    @Query("SELECT c FROM ContratarServicoModel c  WHERE c.statusServico != 'AGUARDANDO' ")
+    List<ContratarServicoModel> findServicosAguardando();
 }
 

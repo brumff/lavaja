@@ -85,7 +85,7 @@ public class ContratarServicoService {
     public void atualizarFila(Integer lavaCarId) {
         List<ContratarServicoModel> fila = contratarServicoRepository.findByLavacarIdOrderByDeletedAsc(lavaCarId);
         
-        // Percorra a fila para atualizar o tempo
+      
         int tempo = 0;
         for (ContratarServicoModel model : fila) {
             if (!model.isDeleted()) {
@@ -122,7 +122,6 @@ public class ContratarServicoService {
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         int tempoTotal = 0;
     
-        // Verifica o tempo de serviço e adiciona na variável tempoTotal
         var objetosNaFrente = list.subList(index + 1, list.size());
         for (var model : objetosNaFrente) {
             if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
