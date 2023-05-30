@@ -79,6 +79,21 @@ public class ContratarServicoService {
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         contratarServico.setDeleted(true);
         contratarServicoRepository.save(contratarServico);
+        atualizarFila(lavaCar.getId());
+    }
+
+    public void atualizarFila(Integer lavaCarId) {
+        List<ContratarServicoModel> fila = contratarServicoRepository.findByLavacarIdOrderByDeletedAsc(lavaCarId);
+        
+        // Percorra a fila para atualizar o tempo
+        int tempo = 0;
+        for (ContratarServicoModel model : fila) {
+            if (!model.isDeleted()) {
+                model.setTempFila(tempo);
+                contratarServicoRepository.save(model);
+                tempo += model.getServico().getTempServico();
+            }
+        }
     }
 
     public ContratarServicoModel findById(Integer id) {
@@ -106,13 +121,14 @@ public class ContratarServicoService {
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         int tempoTotal = 0;
-        // verifica o tempo de serviço e adiciona na variavel tempo total
+    
+        // Verifica o tempo de serviço e adiciona na variável tempoTotal
         var objetosNaFrente = list.subList(index + 1, list.size());
         for (var model : objetosNaFrente) {
-            if (model.getServico().getLavacarId().equals(lavaCar.getId())) {
+            if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
                 tempoTotal += model.getServico().getTempServico();
             }
         }
         return tempoTotal;
-    }
+}
 }

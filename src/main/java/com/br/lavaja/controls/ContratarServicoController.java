@@ -71,10 +71,10 @@ public class ContratarServicoController {
         return contratarServicoService.updateContratarServico(id, newServico);
     }
 
-    @GetMapping("fila")
+    /*@GetMapping("fila")
     public ResponseEntity<List<?>> getLista() {
-        List<ContratarServicoDTO> listaCarrosEmLavagem = contagemRegressiva.filaLavagem();
-        return ResponseEntity.ok(listaCarrosEmLavagem);
-    }
+        List<ContratarServicoDTO> listaCarros = contagemRegressiva.atualizarTempos();
+        return ResponseEntity.ok(listaCarros);
+    }*/
 
 }

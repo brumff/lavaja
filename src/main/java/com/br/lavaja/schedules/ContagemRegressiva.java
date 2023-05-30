@@ -18,6 +18,7 @@ import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.services.ContratarServicoService;
 
+@Component
 @Service
 public class ContagemRegressiva {
     private Semaphore semaforo = new Semaphore(2);
@@ -48,7 +49,8 @@ public class ContagemRegressiva {
                     () -> regressivaLavagem(contratarServicoDTO.converter()));
             thread.start();
         }
-        return carrosEmLavagem; 
+        return carrosEmLavagem;
     }
+
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.br.lavaja.enums.StatusServico;
@@ -17,7 +18,7 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
     
     List<ContratarServicoModel> findByDonoCarro(DonoCarroModel donoCarro);
 
-    @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.statusServico != 'FINALIZADO' AND c.deleted = 0")
+    @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.statusServico != 'FINALIZADO' AND c.deleted = 0 ORDER BY c.dataServico DESC")
     List<ContratarServicoModel> findByLavacar(LavacarModel lavacar);
 
     List<ContratarServicoModel> findByDeletedFalse();
@@ -26,6 +27,9 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
     List<ContratarServicoModel> findServicosNaoFinalizados();
 
     List<ContratarServicoModel> findByStatusServico(StatusServico statusServico);
+
+    @Query("SELECT cs FROM ContratarServicoModel cs INNER JOIN cs.servico s WHERE s.lavacarId = :lavacarId ORDER BY cs.deleted ASC")
+    List<ContratarServicoModel> findByLavacarIdOrderByDeletedAsc(@Param("lavacarId") Integer lavacarId);
 
 }
 

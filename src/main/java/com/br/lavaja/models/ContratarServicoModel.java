@@ -43,7 +43,7 @@ public class ContratarServicoModel {
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
     private int tempFila;
-
+    private String placaCarro;
     private boolean deleted;
 
     public Integer getId() {
@@ -102,6 +102,14 @@ public class ContratarServicoModel {
         this.tempFila = tempFila;
     }
 
+    public String getPlacaCarro() {
+        return placaCarro;
+    }
+
+    public void setPlacaCarro(String placaCarro) {
+        this.placaCarro = placaCarro;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -127,6 +135,5 @@ public class ContratarServicoModel {
         this.servico = dto.getServicoId();
         this.tempFila = dto.getTempFila();
     }
-
 
 }
