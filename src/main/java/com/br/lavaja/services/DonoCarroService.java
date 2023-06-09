@@ -35,6 +35,10 @@ public class DonoCarroService {
             throw new Error("Usuário já existe");
         }
 
+        if (donoCarro.getSenha().length() < 6 || donoCarro.getConfSenha().length() < 6){
+            throw new Error("Senha deve conter pelo menos 6 caracteres");
+        }
+
         donoCarro.setSenha(passwordEncoder().encode(donoCarro.getSenha()));
         donoCarro.setConfSenha(passwordEncoder().encode(donoCarro.getConfSenha()));
         DonoCarroModel createDonoCarro = donoCarroRepository.save(donoCarro);

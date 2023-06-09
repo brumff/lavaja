@@ -35,9 +35,9 @@ public class DonoCarroModel {
     @Size(max = 150)
     private String email;
     private String genero;
-    @Size(max = 30)
+    @Size(max = 30, min = 6)
     private String senha;
-    @Size(max = 30)
+    @Size(max = 30, min = 6)
     private String confSenha;
     @Enumerated(EnumType.STRING)
     private Perfil perfis;
