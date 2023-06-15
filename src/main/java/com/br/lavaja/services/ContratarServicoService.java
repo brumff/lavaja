@@ -11,6 +11,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -84,8 +85,7 @@ public class ContratarServicoService {
 
     public void atualizarFila(Integer lavaCarId) {
         List<ContratarServicoModel> fila = contratarServicoRepository.findByLavacarIdOrderByDeletedAsc(lavaCarId);
-        
-      
+
         int tempo = 0;
         for (ContratarServicoModel model : fila) {
             if (!model.isDeleted()) {
@@ -102,7 +102,22 @@ public class ContratarServicoService {
 
     public ResponseEntity<ContratarServicoDTO> updateContratarServico(Integer id,
             ContratarServicoModel newContratarServico) {
+        List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
+
+        // Verificar se o ID do serviço está presente na lista
+        boolean isIdPresent = servicos.stream().anyMatch(servico -> servico.getId().equals(id));
+
+        if (!isIdPresent) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Verificar se o serviço é o primeiro da fila
+        if (!servicos.isEmpty() && !servicos.get(0).getId().equals(id)) {
+                  throw new CustomException("Não é possível alterar o status do serviço. Existem serviços na frente aguardando.", HttpStatus.BAD_REQUEST);
+        }
+
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
+
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
@@ -113,7 +128,6 @@ public class ContratarServicoService {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     public int calcularFila(int index, List<ContratarServicoModel> list) {
@@ -121,7 +135,7 @@ public class ContratarServicoService {
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         int tempoTotal = 0;
-    
+
         var objetosNaFrente = list.subList(index + 1, list.size());
         for (var model : objetosNaFrente) {
             if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
@@ -129,5 +143,5 @@ public class ContratarServicoService {
             }
         }
         return tempoTotal;
-}
+    }
 }

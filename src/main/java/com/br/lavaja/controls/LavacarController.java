@@ -44,20 +44,20 @@ public class LavacarController {
         return lavaCarService.createDonoCarro(lavacar);
     }
 
-    @GetMapping
+    @GetMapping("/todos")
     public ResponseEntity<List<LavacarModel>> getAllLavacar() {
         return ResponseEntity.status(HttpStatus.OK).body(lavacarRepository.findAll());
     }
 
     @PreAuthorize("hasAnyRole('LAVACAR')")
-    @GetMapping("/")
+    @GetMapping("/meu-lavacar")
     public LavacarModel getLavacar() {
          UserSS user = UserService.authenticated();
         return this.lavacarRepository.findById(user.getId()).get();
     }
     
     @PreAuthorize("hasAnyRole('LAVACAR')")
-    @PutMapping("/")
+    @PutMapping("/meu-lavacar")
     public ResponseEntity<?> putLavacar(@RequestBody LavacarModel newLavacar) {
         return lavaCarService.updateLavacar(newLavacar);
     }
