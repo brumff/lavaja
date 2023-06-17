@@ -113,7 +113,12 @@ public class ContratarServicoService {
 
         // Verificar se o serviço é o primeiro da fila
         if (!servicos.isEmpty() && !servicos.get(0).getId().equals(id)) {
-                  throw new CustomException("Não é possível alterar o status do serviço. Existem serviços na frente aguardando.", HttpStatus.BAD_REQUEST);
+            if (servicos.get(0).getStatusServico().equals("AGUARDANDO")) {
+                throw new CustomException(
+                        "Não é possível alterar o status do serviço. Existem serviços na frente aguardando.",
+                        HttpStatus.BAD_REQUEST);
+            }
+
         }
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
