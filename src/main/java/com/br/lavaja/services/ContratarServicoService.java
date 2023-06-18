@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
+import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
@@ -26,6 +27,7 @@ import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
 import com.br.lavaja.security.UserSS;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @Service
 public class ContratarServicoService {
@@ -104,24 +106,19 @@ public class ContratarServicoService {
             ContratarServicoModel newContratarServico) {
         List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
 
-        // Verificar se o ID do serviço está presente na lista
-        boolean isIdPresent = servicos.stream().anyMatch(servico -> servico.getId().equals(id));
-
-        if (!isIdPresent) {
-            return ResponseEntity.notFound().build();
+        for (ContratarServicoDTO servico : servicos) {
+            System.out.println(servico); 
         }
-
-        // Verificar se o serviço é o primeiro da fila
-        if (!servicos.isEmpty() && !servicos.get(0).getId().equals(id)) {
-            if (servicos.get(0).getStatusServico().equals("AGUARDANDO")) {
-                throw new CustomException(
-                        "Não é possível alterar o status do serviço. Existem serviços na frente aguardando.",
-                        HttpStatus.BAD_REQUEST);
-            }
-
-        }
-
+        
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
+        //verifica se é o primeiro da lista
+        if(servicos.get(0).getId().equals(id)){
+            //verifica se o primeiro da lista está com status AGUARDANDO
+        } else if (servicos.get(0).getStatusServico() == StatusServico.AGUARDANDO){
+             throw new CustomException(
+        "Não é possível alterar o status do serviço. Existem serviços na frente aguardando.",
+        HttpStatus.BAD_REQUEST);
+        }
 
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();

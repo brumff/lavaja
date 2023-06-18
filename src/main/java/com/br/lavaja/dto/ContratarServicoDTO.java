@@ -138,4 +138,19 @@ public class ContratarServicoDTO {
     public static ContratarServicoDTO toDTO(ContratarServicoModel contratarServicoModel) {
         return modelMapper.map(contratarServicoModel, ContratarServicoDTO.class);
     }
+
+      @Override
+    public String toString() {
+        return "ContratarServicoDTO{" +
+                "id=" + id +
+                ", origem=" + origem +
+                ", statusServico=" + statusServico +
+                ", dataServico=" + dataServico +
+                ", donoCarroId=" + donoCarroId +
+                ", donoCarroNome='" + donoCarroNome + '\'' +
+                ", servicoId=" + servicoId +
+                ", tempFila=" + tempFila +
+                ", placaCarro='" + placaCarro + '\'' +
+                '}';
+    }
 }
