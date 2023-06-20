@@ -39,7 +39,6 @@ public class ContratarServicoModel {
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
-    private int tempFila;
     private String placaCarro;
     private boolean deleted;
 
@@ -91,14 +90,6 @@ public class ContratarServicoModel {
         this.servico = servico;
     }
 
-    public int getTempFila() {
-        return tempFila;
-    }
-
-    public void setTempFila(int tempFila) {
-        this.tempFila = tempFila;
-    }
-
     public String getPlacaCarro() {
         return placaCarro;
     }
@@ -130,7 +121,6 @@ public class ContratarServicoModel {
         this.dataServico = dto.getDataServico();
         this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId(); 
-        this.tempFila = dto.getTempFila();
     }
 
 }

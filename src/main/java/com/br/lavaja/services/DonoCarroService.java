@@ -45,9 +45,7 @@ public class DonoCarroService {
 
     public ResponseEntity<DonoCarroModel> updateDonoCarro(DonoCarroModel newDonoCarro) {
         UserSS user = UserService.authenticated();
-        /*if(user == null || (!id.equals(user.getId()))) {
-            throw new AuthorizationException("Acesso negado");
-        }*/
+        
         Integer id = user.getId();
         Optional<DonoCarroModel> donoCarrOptional = donoCarroRepository.findById(id);
         if(donoCarrOptional.isPresent()) {
@@ -62,9 +60,7 @@ public class DonoCarroService {
             }
             donoCarro.setEmail(newDonoCarro.getEmail());*/
             donoCarro.setGenero(newDonoCarro.getGenero());
-            //donoCarro.setSenha(passwordEncoder().encode(newDonoCarro.getSenha()));
-            //donoCarro.setConfSenha(passwordEncoder().encode(newDonoCarro.getConfSenha()));
-            
+                    
             DonoCarroModel donoCarroUpdate = donoCarroRepository.save(donoCarro);
             return ResponseEntity.ok().body(donoCarroUpdate);
         } else {

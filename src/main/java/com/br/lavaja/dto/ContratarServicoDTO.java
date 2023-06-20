@@ -23,7 +23,6 @@ public class ContratarServicoDTO {
     private Integer donoCarroId;
     private String donoCarroNome;
     private ServicoModel servicoId;
-    private int tempFila;
     private String placaCarro;
     
 
@@ -38,7 +37,6 @@ public class ContratarServicoDTO {
         this.donoCarroId = contratarServico.getDonoCarro().getId();
         this.donoCarroNome = contratarServico.getDonoCarro().getNome();
         this.servicoId = contratarServico.getServico();
-        this.tempFila = contratarServico.getTempFila();
         this.placaCarro = contratarServico.getPlacaCarro();
     }
 
@@ -110,13 +108,6 @@ public class ContratarServicoDTO {
         this.servicoId = servicoId;
     }
 
-    public int getTempFila() {
-        return tempFila;
-    }
-
-    public void setTempFila(int tempFila) {
-        this.tempFila = tempFila;
-    }
 
     public ContratarServicoModel converter() {
         return new ContratarServicoModel(this);
@@ -144,7 +135,6 @@ public class ContratarServicoDTO {
                 ", donoCarroId=" + donoCarroId +
                 ", donoCarroNome='" + donoCarroNome + '\'' +
                 ", servicoId=" + servicoId +
-                ", tempFila=" + tempFila +
                 ", placaCarro='" + placaCarro + '\'' +
                 '}';
     }

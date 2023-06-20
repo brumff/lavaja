@@ -63,12 +63,10 @@ public class ContratarServicoService {
         for (var entity : list) {
             if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
                 var model = entity.converter();
-                model.setTempFila(calcularFila(modelList.size(), list));
                 modelList.add(model);
             }
         }
-        Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
-
+        
         return modelList;
     }
 
@@ -78,21 +76,9 @@ public class ContratarServicoService {
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         contratarServico.setDeleted(true);
         contratarServicoRepository.save(contratarServico);
-        atualizarFila(lavaCar.getId());
+        //atualizarFila(lavaCar.getId());
     }
 
-    public void atualizarFila(Integer lavaCarId) {
-        List<ContratarServicoModel> fila = contratarServicoRepository.findByLavacarIdOrderByDeletedAsc(lavaCarId);
-
-        int tempo = 0;
-        for (ContratarServicoModel model : fila) {
-            if (!model.isDeleted()) {
-                model.setTempFila(tempo);
-                contratarServicoRepository.save(model);
-                tempo += model.getServico().getTempServico();
-            }
-        }
-    }
 
     public ContratarServicoModel findById(Integer id) {
         return contratarServicoRepository.findById(id).orElse(null);
@@ -102,19 +88,17 @@ public class ContratarServicoService {
             ContratarServicoModel newContratarServico) {
         List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
 
-        for (ContratarServicoDTO servico : servicos) {
-            System.out.println(servico); 
-        }
+
         
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         //verifica se é o primeiro da lista
-        if(servicos.get(0).getId().equals(id)){
+        /*if(servicos.get(0).getId().equals(id)){
             //verifica se o primeiro da lista está com status AGUARDANDO
         } else if (servicos.get(0).getStatusServico() == StatusServico.AGUARDANDO){
              throw new CustomException(
         "Não é possível alterar o status do serviço. Existem serviços na frente aguardando.",
         HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
@@ -128,18 +112,5 @@ public class ContratarServicoService {
         }
     }
 
-    public int calcularFila(int index, List<ContratarServicoModel> list) {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        int tempoTotal = 0;
 
-        var objetosNaFrente = list.subList(index + 1, list.size());
-        for (var model : objetosNaFrente) {
-            if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
-                tempoTotal += model.getServico().getTempServico();
-            }
-        }
-        return tempoTotal;
-    }
 }

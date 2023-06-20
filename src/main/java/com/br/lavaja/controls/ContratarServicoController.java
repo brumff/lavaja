@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
-import com.br.lavaja.schedules.ContagemRegressiva;
 import com.br.lavaja.services.ContratarServicoService;
 
 @RestController
@@ -25,9 +24,6 @@ public class ContratarServicoController {
 
     @Autowired
     private ContratarServicoService contratarServicoService;
-
-    @Autowired
-    private ContagemRegressiva contagemRegressiva;
 
     @PostMapping
     public ContratarServicoDTO createDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
@@ -64,12 +60,6 @@ public class ContratarServicoController {
     public ResponseEntity<ContratarServicoDTO> patchContratarServico(@RequestBody ContratarServicoModel newServico,
             @PathVariable Integer id) {
         return contratarServicoService.updateContratarServico(id, newServico);
-    }
-
-    @GetMapping("fila")
-    public ResponseEntity<List<?>> getLista() {
-        List<ContratarServicoDTO> listaCarros = contagemRegressiva.filaLavagem();
-        return ResponseEntity.ok(listaCarros);
     }
 
 }

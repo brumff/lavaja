@@ -26,7 +26,7 @@ public class LavaCarService {
     }
 
     public LavacarModel createDonoCarro(LavacarModel lavacar) {
-
+        //não permite cadastrar dois e-mails iguais
         LavacarModel existeLavacar = lavacarRepository.findByEmail(lavacar.getEmail());
 
         if (existeLavacar != null) {
@@ -43,11 +43,7 @@ public class LavaCarService {
 
     public ResponseEntity<LavacarDTO> updateLavacar(LavacarModel newLavacar) {
         UserSS user = UserService.authenticated();
-        /*
-         * if (user == null || (!id.equals(user.getId()))) {
-         * throw new AuthorizationException("Acesso negado");
-         * }
-         */
+       
         Integer id = user.getId();
         Optional<LavacarModel> lavacarOptional = lavacarRepository.findById(id);
         if (lavacarOptional.isPresent()) {
@@ -72,11 +68,7 @@ public class LavaCarService {
              * }
              */
             lavacar.setEmail(newLavacar.getEmail());
-            /*
-             * lavacar.setSenha(passwordEncoder().encode(newLavacar.getSenha()));
-             * lavacar.setConfSenha(passwordEncoder().encode(newLavacar.getConfSenha()));
-             */
-
+           
             return ResponseEntity.ok().body(new LavacarDTO(lavacarRepository.save(lavacar)));
         } else {
             return ResponseEntity.notFound().build();
