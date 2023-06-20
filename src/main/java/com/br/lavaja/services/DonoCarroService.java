@@ -2,17 +2,13 @@ package com.br.lavaja.services;
 
 import java.util.Optional;
 
-import javax.validation.constraints.Email;
-import javax.websocket.SendHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.br.lavaja.enums.Perfil;
-import com.br.lavaja.exceptions.AuthorizationException;
-import com.br.lavaja.exceptions.DataIntegrityException;
+
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.security.UserSS;

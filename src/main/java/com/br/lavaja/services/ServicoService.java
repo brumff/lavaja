@@ -1,17 +1,12 @@
 package com.br.lavaja.services;
 
-import java.security.SignatureException;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.br.lavaja.exceptions.AuthorizationException;
@@ -21,8 +16,6 @@ import com.br.lavaja.repositories.LavacarRepository;
 import com.br.lavaja.repositories.ServicoRepository;
 import com.br.lavaja.security.UserSS;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 
 @Service
 public class ServicoService {

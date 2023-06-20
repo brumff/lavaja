@@ -1,13 +1,11 @@
 package com.br.lavaja.services;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +20,10 @@ import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
-import com.br.lavaja.models.ServicoModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
 import com.br.lavaja.security.UserSS;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @Service
 public class ContratarServicoService {

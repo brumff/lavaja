@@ -1,9 +1,6 @@
 package com.br.lavaja.models;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +17,7 @@ import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.ser.std.NumberSerializers.FloatSerializer;
+
 
 @Entity
 @Table(name = "contratarservico")
@@ -117,11 +114,11 @@ public class ContratarServicoModel {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-
+     //converte ContratoServicoModel para DTO
     public ContratarServicoDTO converter() {
         return new ContratarServicoDTO(this);
     }
-
+    //salva a data atual local do contrato do serviço
     public ContratarServicoModel() {
         this.dataServico = LocalDateTime.now();
     }
@@ -132,7 +129,7 @@ public class ContratarServicoModel {
         this.statusServico = dto.getStatusServico();
         this.dataServico = dto.getDataServico();
         this.donoCarro = dto.getDonoCarro();
-        this.servico = dto.getServicoId();
+        this.servico = dto.getServicoId(); 
         this.tempFila = dto.getTempFila();
     }
 

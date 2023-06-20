@@ -3,7 +3,6 @@ package com.br.lavaja.controls;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
-import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.schedules.ContagemRegressiva;
 import com.br.lavaja.services.ContratarServicoService;
 
@@ -27,9 +25,6 @@ public class ContratarServicoController {
 
     @Autowired
     private ContratarServicoService contratarServicoService;
-
-    @Autowired
-    private ContratarServicoRepository contratarServicoRepository;
 
     @Autowired
     private ContagemRegressiva contagemRegressiva;

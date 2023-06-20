@@ -1,21 +1,17 @@
 package com.br.lavaja.schedules;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
-import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.services.ContratarServicoService;
 
 @Component

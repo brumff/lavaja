@@ -1,11 +1,6 @@
 package com.br.lavaja.dto;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
 
 import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;

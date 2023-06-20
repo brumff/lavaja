@@ -1,7 +1,5 @@
 package com.br.lavaja.dto;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 import com.br.lavaja.enums.Perfil;
 import com.br.lavaja.models.LavacarModel;
