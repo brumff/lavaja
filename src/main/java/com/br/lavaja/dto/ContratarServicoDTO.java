@@ -24,7 +24,7 @@ public class ContratarServicoDTO {
     private String donoCarroNome;
     private ServicoModel servicoId;
     private String placaCarro;
-    
+    private int tempFila;
 
     private static ModelMapper modelMapper = new ModelMapper();
 
@@ -38,6 +38,7 @@ public class ContratarServicoDTO {
         this.donoCarroNome = contratarServico.getDonoCarro().getNome();
         this.servicoId = contratarServico.getServico();
         this.placaCarro = contratarServico.getPlacaCarro();
+        this.tempFila = contratarServico.getTempFila();
     }
 
     public ContratarServicoDTO() {
@@ -108,6 +109,13 @@ public class ContratarServicoDTO {
         this.servicoId = servicoId;
     }
 
+    public int getTempFila() {
+        return tempFila;
+    }
+
+    public void setTempFila(int tempFila) {
+        this.tempFila = tempFila;
+    }
 
     public ContratarServicoModel converter() {
         return new ContratarServicoModel(this);
@@ -125,7 +133,7 @@ public class ContratarServicoDTO {
         return modelMapper.map(contratarServicoModel, ContratarServicoDTO.class);
     }
 
-      @Override
+    @Override
     public String toString() {
         return "ContratarServicoDTO{" +
                 "id=" + id +

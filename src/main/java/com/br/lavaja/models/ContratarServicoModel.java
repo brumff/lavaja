@@ -18,7 +18,6 @@ import com.br.lavaja.enums.Origem;
 import com.br.lavaja.enums.StatusServico;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-
 @Entity
 @Table(name = "contratarservico")
 public class ContratarServicoModel {
@@ -34,13 +33,22 @@ public class ContratarServicoModel {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataServico;
     @ManyToOne
-    @JoinColumn(name = "donocarro_id", referencedColumnName = "id")
+    @JoinColumn(name = "donocarro_id", referencedColumnName = "id", nullable = true)
     private DonoCarroModel donoCarro;
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
     private String placaCarro;
     private boolean deleted;
+    private int tempFila;
+
+    public int getTempFila() {
+        return tempFila;
+    }
+
+    public void setTempFila(int tempFila) {
+        this.tempFila = tempFila;
+    }
 
     public Integer getId() {
         return id;
@@ -105,11 +113,13 @@ public class ContratarServicoModel {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-     //converte ContratoServicoModel para DTO
+
+    // converte ContratoServicoModel para DTO
     public ContratarServicoDTO converter() {
         return new ContratarServicoDTO(this);
     }
-    //salva a data atual local do contrato do serviço
+
+    // salva a data atual local do contrato do serviço
     public ContratarServicoModel() {
         this.dataServico = LocalDateTime.now();
     }
@@ -120,7 +130,8 @@ public class ContratarServicoModel {
         this.statusServico = dto.getStatusServico();
         this.dataServico = dto.getDataServico();
         this.donoCarro = dto.getDonoCarro();
-        this.servico = dto.getServicoId(); 
+        this.servico = dto.getServicoId();
+        this.tempFila = dto.getTempFila();
     }
 
 }

@@ -32,7 +32,7 @@ public class LavaCarService {
         if (existeLavacar != null) {
             throw new Error("Usuário já existe");
         }
-
+        lavacar.setAberto(false);
         lavacar.setSenha(passwordEncoder().encode(lavacar.getSenha()));
         lavacar.setConfSenha(passwordEncoder().encode(lavacar.getConfSenha()));
         LavacarModel createLavacar = lavacarRepository.save(lavacar);

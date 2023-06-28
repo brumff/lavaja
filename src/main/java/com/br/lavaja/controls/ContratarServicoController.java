@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
+import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.services.ContratarServicoService;
 
 @RestController
@@ -27,6 +28,9 @@ public class ContratarServicoController {
 
     @PostMapping
     public ContratarServicoDTO createDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
+        var donoCarro  = contratarServico.getDonoCarro() == null ? new DonoCarroModel() :  contratarServico.getDonoCarro() ;
+        donoCarro.setId(0);
+        contratarServico.setDonoCarro(donoCarro);
         return new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
     }
 
