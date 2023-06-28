@@ -39,8 +39,12 @@ public class ContratarServicoService {
     public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
-        if(donocarro != null){
-         contratarServico.setDonoCarro(donocarro);
+        if (donocarro != null) {
+            contratarServico.setDonoCarro(donocarro);
+        } else {
+            DonoCarroModel donoCarroPadrao = new DonoCarroModel();
+            donoCarroPadrao.setId(1);
+            contratarServico.setDonoCarro(donoCarroPadrao);
         }
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
@@ -57,7 +61,7 @@ public class ContratarServicoService {
     }
 
     public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
-        UserSS user = UserService.authenticated();
+       UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         var list = contratarServicoRepository.findByLavacar(lavaCar);
@@ -65,10 +69,11 @@ public class ContratarServicoService {
         for (var entity : list) {
             if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
                 var model = entity.converter();
+                model.setTempFila(calcularFila(modelList.size(), list));
                 modelList.add(model);
             }
         }
-
+        Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
         return modelList;
     }
 
@@ -91,14 +96,15 @@ public class ContratarServicoService {
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         // verifica se é o primeiro da lista
-       // if (servicos.get(0).getId().equals(id)) {
-            // verifica se o primeiro da lista está com status AGUARDANDO
-       // }
-        //if (servicos.get(0).getStatusServico() == StatusServico.AGUARDANDO) {
-          //  throw new CustomException(
-                //    "Não é possível alterar o status do serviço. Existem serviços na frente aguardando.",
-             //       HttpStatus.BAD_REQUEST);
-        //}
+        // if (servicos.get(0).getId().equals(id)) {
+        // verifica se o primeiro da lista está com status AGUARDANDO
+        // }
+        // if (servicos.get(0).getStatusServico() == StatusServico.AGUARDANDO) {
+        // throw new CustomException(
+        // "Não é possível alterar o status do serviço. Existem serviços na frente
+        // aguardando.",
+        // HttpStatus.BAD_REQUEST);
+        // }
 
         if (contratarServicoOptional.isPresent()) {
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
@@ -111,5 +117,17 @@ public class ContratarServicoService {
             return ResponseEntity.notFound().build();
         }
     }
-
+     public int calcularFila(int index, List<ContratarServicoModel> list) {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+        int tempoTotal = 0;
+        var objetosNaFrente = list.subList(index + 1, list.size());
+        for (var model : objetosNaFrente) {
+            if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
+                tempoTotal += model.getServico().getTempServico();
+            }
+        }
+        return tempoTotal;
+    }
 }
