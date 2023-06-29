@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.br.lavaja.enums.Perfil;
+import com.br.lavaja.models.LavacarModel;
 
 public class UserSS implements UserDetails {
 
@@ -15,22 +16,31 @@ public class UserSS implements UserDetails {
     private String email;
     private String senha;
     private Collection<? extends GrantedAuthority> authorities;
+    private Boolean aberto;
 
     public UserSS() {
 
     }
 
-    public UserSS(Integer id, String email, String senha, Perfil perfis) {
+    public UserSS(Integer id, String email, String senha, Perfil perfis, Boolean aberto) {
         final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(perfis.getDescricao()));
 
         this.id = id;
         this.email = email;
         this.senha = senha;
         this.authorities = authorities;
+        this.aberto = aberto;
     }
 
     public Integer getId() {
         return id;
+    }
+      public Boolean getAberto() {
+        return aberto;
+    }
+
+    public void setAberto(Boolean aberto) {
+        this.aberto = aberto;
     }
 
     @Override
