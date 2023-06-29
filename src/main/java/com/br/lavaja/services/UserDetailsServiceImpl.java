@@ -31,9 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         if (lavacar != null) { // Se encontrou um usuário do tipo lavacar, retorna as informações dele
-            return new UserSS(lavacar.getId(), lavacar.getEmail(), lavacar.getSenha(), lavacar.getPerfis(), lavacar.isAberto());
+            return new UserSS(lavacar.getId(), lavacar.getEmail(), lavacar.getSenha(), lavacar.getPerfis());
         } else { // Se encontrou um usuário do tipo dono de carro, retorna as informações dele
-            return new UserSS(donocarro.getId(), donocarro.getEmail(), donocarro.getSenha(), donocarro.getPerfis(), false);
+            return new UserSS(donocarro.getId(), donocarro.getEmail(), donocarro.getSenha(), donocarro.getPerfis());
         }
 
     }

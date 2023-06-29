@@ -16,32 +16,24 @@ public class UserSS implements UserDetails {
     private String email;
     private String senha;
     private Collection<? extends GrantedAuthority> authorities;
-    private Boolean aberto;
 
     public UserSS() {
 
     }
 
-    public UserSS(Integer id, String email, String senha, Perfil perfis, Boolean aberto) {
+    public UserSS(Integer id, String email, String senha, Perfil perfis) {
         final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(perfis.getDescricao()));
 
         this.id = id;
         this.email = email;
         this.senha = senha;
         this.authorities = authorities;
-        this.aberto = aberto;
     }
 
     public Integer getId() {
         return id;
     }
-      public Boolean getAberto() {
-        return aberto;
-    }
 
-    public void setAberto(Boolean aberto) {
-        this.aberto = aberto;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
