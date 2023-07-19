@@ -68,9 +68,12 @@ public class ContratarServicoService {
         var modelList = new ArrayList<ContratarServicoDTO>();
         for (var entity : list) {
             if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
-                var model = entity.converter();
-                model.setTempFila(calcularFila(modelList.size(), list));
-                modelList.add(model);
+                if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
+                    var model = entity.converter();
+                    // atribui o tempo de fila 
+                    model.setTempFila(calcularFila(modelList.size(), list));
+                    modelList.add(model);
+                }
             }
         }
         Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
@@ -117,6 +120,7 @@ public class ContratarServicoService {
             return ResponseEntity.notFound().build();
         }
     }
+
      public int calcularFila(int index, List<ContratarServicoModel> list) {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())

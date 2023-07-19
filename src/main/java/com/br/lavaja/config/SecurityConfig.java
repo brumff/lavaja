@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.br.lavaja.security.JWTAuthenticationFilter;
 import com.br.lavaja.security.JWTAuthorizationFilter;
@@ -34,15 +35,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTUtil jwtUtil;
 
     public static final String[] PUBLIC_MATCHERS = {
-            "/api/v1/lavacar",
-            "/api/v1/servico/ativos",
-            "/api/v1/lavacar/todos"
+             "/api/v1/lavacar",
+             "/api/v1/servico/ativos",
+             "/api/v1/lavacar/todos",
+             "/login"
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {
-            "/api/v1/lavacar",
-            "/api/v1/donocarro",
-            "/login"
+             "/api/v1/lavacar",
+             "/api/v1/donocarro",
+             "/login"
     };
 
     @Override

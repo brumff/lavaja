@@ -11,12 +11,13 @@ public class LavacarDTO {
     private String imgLavacar;
     private String cnpj;
     private String nome;
-    private String logradouro;
+    private String rua;
     private String numero;
-    private String complemento;
     private String bairro;
     private String cidade;
     private String cep;
+    private Double latitude;
+    private Double longitude;
     private String telefone1;
     private String telefone2;
     private String email;
@@ -41,9 +42,8 @@ public class LavacarDTO {
         this.imgLavacar = lavacar.getImgLavacar();
         this.cnpj = lavacar.getCnpj();
         this.nome = lavacar.getNome();
-        this.logradouro = lavacar.getLogradouro();
+        this.rua = lavacar.getRua();
         this.numero = lavacar.getNumero();
-        this.complemento = lavacar.getComplemento();
         this.bairro = lavacar.getBairro();
         this.cidade = lavacar.getCidade();
         this.cep = lavacar.getCep();
@@ -89,12 +89,12 @@ public class LavacarDTO {
         this.nome = nome;
     }
 
-    public String getLogradouro() {
-        return logradouro;
+    public String getRua() {
+        return rua;
     }
 
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
+    public void setRua(String logradouro) {
+        this.rua = rua;
     }
 
     public String getNumero() {
@@ -103,14 +103,6 @@ public class LavacarDTO {
 
     public void setNumero(String numero) {
         this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
     }
 
     public String getBairro() {

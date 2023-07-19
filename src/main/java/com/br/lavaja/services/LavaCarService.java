@@ -50,9 +50,8 @@ public class LavaCarService {
             LavacarModel lavacar = lavacarOptional.get();
             lavacar.setCnpj(newLavacar.getCnpj());
             lavacar.setNome(newLavacar.getNome());
-            lavacar.setLogradouro(newLavacar.getLogradouro());
+            lavacar.setRua(newLavacar.getRua());
             lavacar.setNumero(newLavacar.getNumero());
-            lavacar.setComplemento(newLavacar.getComplemento());
             lavacar.setBairro(newLavacar.getBairro());
             lavacar.setCidade(newLavacar.getCidade());
             lavacar.setCep(newLavacar.getCep());
