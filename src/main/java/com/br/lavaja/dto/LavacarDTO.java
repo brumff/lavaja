@@ -1,6 +1,5 @@
 package com.br.lavaja.dto;
 
-
 import com.br.lavaja.enums.Perfil;
 import com.br.lavaja.models.LavacarModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,6 +24,7 @@ public class LavacarDTO {
     private String confSenha;
     private Boolean aberto;
     private Perfil perfis;
+    private Float tempoFila;
 
     public LavacarDTO(LavacarModel lavacar, String tipo) {
         switch (tipo) {
@@ -185,4 +185,11 @@ public class LavacarDTO {
         this.perfis = perfis;
     }
 
+    public Float getTempoFila() {
+        return tempoFila;
+    }
+
+    public void setTempoFila(Float tempoFila) {
+        this.tempoFila = tempoFila;
+    }
 }

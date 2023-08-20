@@ -40,6 +40,11 @@ public class LavacarController {
         return ResponseEntity.status(HttpStatus.OK).body(lavacarRepository.findAll());
     }
 
+    @GetMapping("/abertos")
+    public ResponseEntity<List<LavacarModel>> lavacarAberto() {
+        return ResponseEntity.status(HttpStatus.OK).body(lavacarRepository.lavacarAberto());
+    }
+
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/meu-lavacar")
     public LavacarModel getLavacar() {

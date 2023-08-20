@@ -1,5 +1,7 @@
 package com.br.lavaja.services;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,7 +63,7 @@ public class ContratarServicoService {
     }
 
     public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
-       UserSS user = UserService.authenticated();
+        UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         var list = contratarServicoRepository.findByLavacar(lavaCar);
@@ -70,7 +72,7 @@ public class ContratarServicoService {
             if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
                 if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
                     var model = entity.converter();
-                    // atribui o tempo de fila 
+                    // atribui o tempo de fila
                     model.setTempFila(calcularFila(modelList.size(), list));
                     modelList.add(model);
                 }
@@ -78,6 +80,19 @@ public class ContratarServicoService {
         }
         Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
         return modelList;
+    }
+
+    public int listaUltimo() {
+        UserSS user = UserService.authenticated();
+        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+        var servico = contratarServicoRepository.findFirstlavacarUlt(lavaCar);
+        var dataServico = servico.getDataServico();
+        var now = LocalDateTime.now();
+        var duracao = Duration.between(now, dataServico).toMinutesPart();
+
+        return duracao;
+
     }
 
     public void softDeleted(ContratarServicoModel contratarServico) {
@@ -121,7 +136,7 @@ public class ContratarServicoService {
         }
     }
 
-     public int calcularFila(int index, List<ContratarServicoModel> list) {
+    public int calcularFila(int index, List<ContratarServicoModel> list) {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));

@@ -66,5 +66,6 @@ public class ServicoService {
     
         return servicoRepository.findByLavacarId(lavacar.getId());
     }
+    
 
 }

@@ -48,6 +48,13 @@ public class ContratarServicoController {
         return ResponseEntity.ok(servicos);
     }
 
+      @PreAuthorize("hasAnyRole('LAVACAR')")
+    @GetMapping("/lavacar-servicos-ultimo")
+    public ResponseEntity<?> getListarServicosLavacarUltimo() {
+        int servicos = contratarServicoService.listaUltimo();
+        return ResponseEntity.ok(servicos);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> softDeleted(@PathVariable Integer id) {
         ContratarServicoModel contratarServicoModel = contratarServicoService.findById(id);

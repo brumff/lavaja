@@ -13,12 +13,15 @@ import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
 
 @Repository
-public interface ContratarServicoRepository  extends JpaRepository<ContratarServicoModel, Integer> {
-    
+public interface ContratarServicoRepository extends JpaRepository<ContratarServicoModel, Integer> {
+
     List<ContratarServicoModel> findByDonoCarro(DonoCarroModel donoCarro);
 
-    @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.deleted = 0 ORDER BY c.dataServico ASC")
+    @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.deleted = 0 AND c.statusServico != 'FINALIZADO' ORDER BY c.dataServico ASC")
     List<ContratarServicoModel> findByLavacar(LavacarModel lavacar);
+
+    @Query(value = "SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.deleted = 0 AND c.statusServico != 'FINALIZADO' ORDER BY c.dataServico ASC")
+    ContratarServicoModel findFirstlavacarUlt(LavacarModel lavacar);
 
     List<ContratarServicoModel> findByDeletedFalse();
 
@@ -33,4 +36,3 @@ public interface ContratarServicoRepository  extends JpaRepository<ContratarServ
     @Query("SELECT c FROM ContratarServicoModel c  WHERE c.statusServico != 'AGUARDANDO' ")
     List<ContratarServicoModel> findServicosAguardando();
 }
-
