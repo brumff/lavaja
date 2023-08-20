@@ -1,7 +1,5 @@
 package com.br.lavaja.services;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,10 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.StatusServico;
@@ -24,6 +21,7 @@ import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
+import com.br.lavaja.repositories.ServicoRepository;
 import com.br.lavaja.security.UserSS;
 
 @Service
@@ -38,8 +36,22 @@ public class ContratarServicoService {
     @Autowired
     LavacarRepository lavacarRepository;
 
+     @Autowired
+    ServicoRepository servicoRepository;
+
     public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        var servico = servicoRepository.findById(contratarServico.getServico().getId());
+        contratarServico.setServico(servico.get());
+        var lavacarId = servico.get().getLavacarId();                                                   
+        System.out.println(contratarServico.getServico().getId());
+        System.out.println(lavacarId);
+        var optional = lavacarRepository.findById(lavacarId);
+
+        if (optional.isEmpty()) {
+
+        }
+        var lavacar = optional.get();
         DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
         if (donocarro != null) {
             contratarServico.setDonoCarro(donocarro);
@@ -50,6 +62,9 @@ public class ContratarServicoService {
         }
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
+        var tempoFila = listaUltimo();
+        lavacar.setTempoFila((float) tempoFila);
+        lavacarRepository.save(lavacar);
         return createContratoServico;
     }
 
@@ -86,12 +101,15 @@ public class ContratarServicoService {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        var servico = contratarServicoRepository.findFirstlavacarUlt(lavaCar);
-        var dataServico = servico.getDataServico();
-        var now = LocalDateTime.now();
-        var duracao = Duration.between(now, dataServico).toMinutesPart();
-
-        return duracao;
+        var servicos = contratarServicoRepository.findByLavacar(lavaCar);
+        var tempoTotal = 0;
+        for (var servico : servicos) {
+            if (servico != null && servico.getServico() != null) {
+                var tempoServico = servico.getServico().getTempServico() == null ? 0 : servico.getServico().getTempServico();
+                tempoTotal += tempoServico;
+            }
+        }
+        return tempoTotal;
 
     }
 
@@ -125,12 +143,23 @@ public class ContratarServicoService {
         // }
 
         if (contratarServicoOptional.isPresent()) {
+
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
+            var lavacarId = contratarServico.getServico().getLavacarId();
+            var optional = lavacarRepository.findById(lavacarId);
+            if (optional.isEmpty()) {
+
+            }
+            var lavacar = optional.get();
 
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
+            var tempoFila = lavacar.getTempoFila()-(float)contratarServico.getServico().getTempServico();
+            lavacar.setTempoFila(tempoFila);
+            lavacarRepository.save(lavacar);
             return ResponseEntity.ok().body(contratarServicoDTO);
+
         } else {
             return ResponseEntity.notFound().build();
         }

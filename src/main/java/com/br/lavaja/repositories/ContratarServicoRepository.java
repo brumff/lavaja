@@ -20,9 +20,6 @@ public interface ContratarServicoRepository extends JpaRepository<ContratarServi
     @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.deleted = 0 AND c.statusServico != 'FINALIZADO' ORDER BY c.dataServico ASC")
     List<ContratarServicoModel> findByLavacar(LavacarModel lavacar);
 
-    @Query(value = "SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.deleted = 0 AND c.statusServico != 'FINALIZADO' ORDER BY c.dataServico ASC")
-    ContratarServicoModel findFirstlavacarUlt(LavacarModel lavacar);
-
     List<ContratarServicoModel> findByDeletedFalse();
 
     @Query("SELECT c FROM ContratarServicoModel c JOIN c.servico s  WHERE c.statusServico != 'FINALIZADO' ")
