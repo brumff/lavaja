@@ -18,6 +18,8 @@ public class ContratarServicoDTO {
     private StatusServico statusServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataFinalServico;
     @JsonIgnore
     private DonoCarroModel donoCarro;
     private Integer donoCarroId;
@@ -33,6 +35,7 @@ public class ContratarServicoDTO {
         this.origem = contratarServico.getOrigem();
         this.statusServico = contratarServico.getStatusServico();
         this.dataServico = contratarServico.getDataServico();
+        this.dataFinalServico = contratarServico.getDataFinalServico();
         this.donoCarro = contratarServico.getDonoCarro();
         this.donoCarroId = contratarServico.getDonoCarro().getId();
         this.donoCarroNome = contratarServico.getDonoCarro().getNome();
@@ -75,6 +78,14 @@ public class ContratarServicoDTO {
 
     public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
+    }
+
+    public LocalDateTime getDataFinalServico() {
+        return dataFinalServico;
+    }
+
+    public void setDataFinalServico(LocalDateTime dataFinalServico) {
+        this.dataFinalServico = dataFinalServico;
     }
 
     public DonoCarroModel getDonoCarro() {

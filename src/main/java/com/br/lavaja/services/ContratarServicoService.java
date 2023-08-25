@@ -1,5 +1,8 @@
 package com.br.lavaja.services;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,14 +39,14 @@ public class ContratarServicoService {
     @Autowired
     LavacarRepository lavacarRepository;
 
-     @Autowired
+    @Autowired
     ServicoRepository servicoRepository;
 
     public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var servico = servicoRepository.findById(contratarServico.getServico().getId());
         contratarServico.setServico(servico.get());
-        var lavacarId = servico.get().getLavacarId();                                                   
+        var lavacarId = servico.get().getLavacarId();
         System.out.println(contratarServico.getServico().getId());
         System.out.println(lavacarId);
         var optional = lavacarRepository.findById(lavacarId);
@@ -64,6 +67,7 @@ public class ContratarServicoService {
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
         var tempoFila = listaUltimo();
         lavacar.setTempoFila((float) tempoFila);
+        System.out.println(tempoFila);
         lavacarRepository.save(lavacar);
         return createContratoServico;
     }
@@ -102,13 +106,24 @@ public class ContratarServicoService {
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         var servicos = contratarServicoRepository.findByLavacar(lavaCar);
+
         var tempoTotal = 0;
+
         for (var servico : servicos) {
             if (servico != null && servico.getServico() != null) {
-                var tempoServico = servico.getServico().getTempServico() == null ? 0 : servico.getServico().getTempServico();
+
+                var tempoServico = servico.getServico().getTempServico() == null ? 0
+                        : servico.getServico().getTempServico();
+
+                var tempoDeServico = ChronoUnit.MINUTES.between(servico.getDataServico(), LocalDateTime.now());
+                if (tempoDeServico > servico.getServico().getTempServico()) {
+                    tempoTotal += tempoDeServico;
+                    continue;
+                }
                 tempoTotal += tempoServico;
-            }
+            } 
         }
+        System.out.println(tempoTotal);
         return tempoTotal;
 
     }
@@ -131,17 +146,6 @@ public class ContratarServicoService {
         List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
-        // verifica se é o primeiro da lista
-        // if (servicos.get(0).getId().equals(id)) {
-        // verifica se o primeiro da lista está com status AGUARDANDO
-        // }
-        // if (servicos.get(0).getStatusServico() == StatusServico.AGUARDANDO) {
-        // throw new CustomException(
-        // "Não é possível alterar o status do serviço. Existem serviços na frente
-        // aguardando.",
-        // HttpStatus.BAD_REQUEST);
-        // }
-
         if (contratarServicoOptional.isPresent()) {
 
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
@@ -152,11 +156,13 @@ public class ContratarServicoService {
 
             }
             var lavacar = optional.get();
-
+            if (newContratarServico.getStatusServico() == StatusServico.FINALIZADO) {
+                contratarServico.setDataFinalServico(LocalDateTime.now());
+                var tempoFila = lavacar.getTempoFila() - (float) contratarServico.getServico().getTempServico();
+                lavacar.setTempoFila(tempoFila);
+            }
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
-            var tempoFila = lavacar.getTempoFila()-(float)contratarServico.getServico().getTempServico();
-            lavacar.setTempoFila(tempoFila);
             lavacarRepository.save(lavacar);
             return ResponseEntity.ok().body(contratarServicoDTO);
 

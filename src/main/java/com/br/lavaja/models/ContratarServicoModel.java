@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.Origem;
@@ -32,6 +33,8 @@ public class ContratarServicoModel {
     private StatusServico statusServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataFinalServico;
     @ManyToOne
     @JoinColumn(name = "donocarro_id", referencedColumnName = "id", nullable = true)
     private DonoCarroModel donoCarro;
@@ -40,6 +43,8 @@ public class ContratarServicoModel {
     private ServicoModel servico;
     private String placaCarro;
     private boolean deleted;
+    @Size(max = 15)
+    private String telefone;
     private int tempFila;
 
     public int getTempFila() {
@@ -81,6 +86,14 @@ public class ContratarServicoModel {
     public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
     }
+    
+    public LocalDateTime getDataFinalServico() {
+        return dataFinalServico;
+    }
+
+    public void setDataFinalServico(LocalDateTime dataFinalServico) {
+        this.dataFinalServico = dataFinalServico;
+    }
 
     public DonoCarroModel getDonoCarro() {
         return donoCarro;
@@ -114,6 +127,14 @@ public class ContratarServicoModel {
         this.deleted = deleted;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     // converte ContratoServicoModel para DTO
     public ContratarServicoDTO converter() {
         return new ContratarServicoDTO(this);
@@ -129,6 +150,7 @@ public class ContratarServicoModel {
         this.origem = dto.getOrigem();
         this.statusServico = dto.getStatusServico();
         this.dataServico = dto.getDataServico();
+        this.dataFinalServico = dto.getDataFinalServico();
         this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId();
         this.tempFila = dto.getTempFila();
