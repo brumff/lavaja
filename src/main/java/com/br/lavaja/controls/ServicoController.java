@@ -1,6 +1,7 @@
 package com.br.lavaja.controls;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.br.lavaja.models.ServicoModel;
@@ -43,13 +45,14 @@ public class ServicoController {
     public ServicoModel getServico(@PathVariable Integer id) {
         return this.servicoRepository.findById(id).get();
     }
-    //mudar
+
+    // mudar
     @PreAuthorize("hasAnyRole('LAVACAR')")
     @PutMapping("/{id}")
     public ResponseEntity<ServicoModel> putServico(@RequestBody ServicoModel newServico, @PathVariable Integer id) {
         return servicoService.updateServico(id, newServico);
     }
-    
+
     @GetMapping("/ativos")
     public List<ServicoModel> getServicosAtivos() {
         boolean ativo = true;
@@ -57,8 +60,14 @@ public class ServicoController {
     }
 
     @GetMapping("/meus-servicos")
-    public ResponseEntity<List<ServicoModel>> getListarServicosLavacar() {
-        List<ServicoModel> servicos = servicoService.listaServicoLavacar();
+    public ResponseEntity<List<ServicoModel>> getListarServicosLavacarLogado() {
+        List<ServicoModel> servicos = servicoService.listaServicoLavacarLogado();
+        return ResponseEntity.ok(servicos);
+    }
+
+    @GetMapping("/servicos-lavcar")
+    public ResponseEntity<List<ServicoModel>> getListarServicosLavacar(@RequestParam Integer lavacarid) {
+        List<ServicoModel> servicos = servicoService.listaServicoLavacar(lavacarid);
         return ResponseEntity.ok(servicos);
     }
 }
