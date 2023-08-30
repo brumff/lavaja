@@ -7,9 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.br.lavaja.enums.Perfil;
+import com.br.lavaja.validation.UniqueCPF;
 
 @Entity
 @Table(name = "donocarro")
@@ -18,6 +20,10 @@ public class DonoCarroModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
+    @NotNull
+    @UniqueCPF
+    @Size(max = 14)
+    private String cpf;
     @Size(max = 15)
     private String telefone;
     @Size(max = 150)
@@ -40,6 +46,14 @@ public class DonoCarroModel {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getNome() {

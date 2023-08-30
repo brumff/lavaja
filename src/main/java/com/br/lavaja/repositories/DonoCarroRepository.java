@@ -14,4 +14,6 @@ public interface DonoCarroRepository extends JpaRepository<DonoCarroModel, Integ
 
     DonoCarroModel findByEmail(String email);
 
+    boolean existsByCpf(String cpf);
+
 }
