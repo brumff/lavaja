@@ -1,11 +1,16 @@
 package com.br.lavaja.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,6 +38,8 @@ public class DonoCarroModel {
     private String senha;
     @Size(max = 30, min = 6)
     private String confSenha;
+   
+
     @Enumerated(EnumType.STRING)
     private Perfil perfis;
 
@@ -104,6 +111,7 @@ public class DonoCarroModel {
         this.confSenha = confSenha;
     }
 
+   
     public Perfil getPerfis() {
         return this.perfis;
     }
