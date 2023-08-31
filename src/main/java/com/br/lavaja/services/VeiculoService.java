@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.exceptions.ValidationException;
+import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.models.ServicoModel;
@@ -77,6 +78,10 @@ public class VeiculoService {
 
         return veiculoRepository.findById(veiculo.getId());
     }
+     public VeiculoModel findById(Integer id) {
+        return veiculoRepository.findById(id).orElse(null);
+    }
+
 
  public void softDeleted(VeiculoModel veiculo) {
         UserSS user = UserService.authenticated();
