@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +63,12 @@ public class LavacarController {
     @PostMapping("/abrir")
     public ResponseEntity<LavacarDTO> abrirLavacar(@RequestBody boolean aberto) {
         return ResponseEntity.ok().body(lavaCarService.abrirLavacar(aberto));
+    }
+
+    @GetMapping("/{id}")
+    public LavacarDTO getLavacarId(@PathVariable Integer id) {
+
+        return lavaCarService.findId(id);
     }
     
 

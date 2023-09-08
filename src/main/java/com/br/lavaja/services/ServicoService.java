@@ -2,12 +2,17 @@ package com.br.lavaja.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.br.lavaja.dto.LavacarDTO;
+import com.br.lavaja.dto.ServicoDTO;
 import com.br.lavaja.exceptions.AuthorizationException;
 import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.models.ServicoModel;
@@ -67,8 +72,38 @@ public class ServicoService {
         return servicoRepository.findByLavacarId(lavacar.getId());
     }
 
-    public List<ServicoModel> listaServicoLavacar(Integer lavacarId) {
+   public List<ServicoDTO> listaServicoLavacar(Integer lavacarId) {
+        List<ServicoModel> servicos = servicoRepository.findByLavacarId(lavacarId);
+        
+        return servicos.stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
+    }
 
-        return servicoRepository.findByLavacarId(lavacarId);
+    private ServicoDTO mapToDTO(ServicoModel servico) {
+        ServicoDTO dto = new ServicoDTO();
+        dto.setId(servico.getId());
+        dto.setNome(servico.getNome());
+        dto.setValor(servico.getValor());
+        dto.setTamCarro(servico.getTamCarro());
+        dto.setTempServico(servico.getTempServico());
+        dto.setAtivo(servico.isAtivo());
+        
+
+      LavacarModel lavacar = lavacarRepository.findById(servico.getLavacarId())
+            .orElseThrow(() -> new EntityNotFoundException("Lavacar não encontrado"));
+
+        LavacarDTO lavacarDTO = new LavacarDTO();
+        lavacarDTO.setId(lavacar.getId());
+        lavacarDTO.setNome(lavacar.getNome());
+        lavacarDTO.setCidade(lavacar.getCidade());
+        lavacarDTO.setBairro(lavacar.getBairro());
+        lavacarDTO.setRua(lavacar.getRua());
+        lavacarDTO.setNumero(lavacar.getNumero());
+        lavacarDTO.setTelefone1(lavacar.getTelefone1());
+        lavacarDTO.setTelefone2(lavacar.getTelefone2());
+        dto.setLavacar(lavacarDTO);
+        
+        return dto;
     }
 }

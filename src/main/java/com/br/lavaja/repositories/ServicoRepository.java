@@ -20,5 +20,5 @@ public interface ServicoRepository extends JpaRepository <ServicoModel, Integer>
     @Query("SELECT s FROM ServicoModel s WHERE s.ativo = 1")
     List<ServicoModel> buscarServicosAtivos(@Param("ativo") Boolean ativo);
 
-    List<ServicoModel> findByLavacarId(Integer lavacarId);
+    List<ServicoModel> findByLavacarId(Integer lavacarId);  
 }

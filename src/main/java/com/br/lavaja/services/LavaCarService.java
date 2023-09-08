@@ -26,7 +26,7 @@ public class LavaCarService {
     }
 
     public LavacarModel createDonoCarro(LavacarModel lavacar) {
-        //não permite cadastrar dois e-mails iguais
+        // não permite cadastrar dois e-mails iguais
         LavacarModel existeLavacar = lavacarRepository.findByEmail(lavacar.getEmail());
 
         if (existeLavacar != null) {
@@ -43,7 +43,7 @@ public class LavaCarService {
 
     public ResponseEntity<LavacarDTO> updateLavacar(LavacarModel newLavacar) {
         UserSS user = UserService.authenticated();
-       
+
         Integer id = user.getId();
         Optional<LavacarModel> lavacarOptional = lavacarRepository.findById(id);
         if (lavacarOptional.isPresent()) {
@@ -67,14 +67,14 @@ public class LavaCarService {
              * }
              */
             lavacar.setEmail(newLavacar.getEmail());
-           
+
             return ResponseEntity.ok().body(new LavacarDTO(lavacarRepository.save(lavacar)));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    public LavacarModel find(Integer id) {
+    public LavacarModel findToken(Integer id) {
 
         UserSS user = UserService.authenticated();
         if (user == null || !user.hasRole(Perfil.LAVACAR) && !id.equals(user.getId())) {
@@ -99,5 +99,15 @@ public class LavaCarService {
 
     }
 
-    
+    public LavacarDTO findId(Integer id) {
+        Optional<LavacarModel> lavacarOptional = lavacarRepository.findById(id);
+
+        if (lavacarOptional.isPresent()) {
+            LavacarModel lavacar = lavacarOptional.get();
+            LavacarDTO lavacarDTO = new LavacarDTO(lavacar);
+            return lavacarDTO;
+        } else {
+            throw new RuntimeException("Lavacar não encontrado");
+        }
+    }
 }

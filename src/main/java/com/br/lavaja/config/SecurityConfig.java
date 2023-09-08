@@ -39,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              "/api/v1/servico/ativos",
              "/api/v1/servico/**",
              "/api/v1/lavacar/todos",
-             "/login"
+             "/login",
+             "/api/v1/lavacar/{id}",
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {

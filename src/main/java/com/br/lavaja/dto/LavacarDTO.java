@@ -51,6 +51,7 @@ public class LavacarDTO {
         this.telefone2 = lavacar.getTelefone2();
         this.email = lavacar.getEmail();
         this.perfis = lavacar.getPerfis();
+        this.tempoFila = lavacar.getTempoFila();
     }
 
     public LavacarDTO() {

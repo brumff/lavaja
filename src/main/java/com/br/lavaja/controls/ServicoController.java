@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.br.lavaja.dto.ServicoDTO;
 import com.br.lavaja.models.ServicoModel;
 import com.br.lavaja.repositories.ServicoRepository;
 import com.br.lavaja.services.ServicoService;
@@ -66,8 +67,8 @@ public class ServicoController {
     }
 
     @GetMapping("/servicos-lavcar")
-    public ResponseEntity<List<ServicoModel>> getListarServicosLavacar(@RequestParam Integer lavacarid) {
-        List<ServicoModel> servicos = servicoService.listaServicoLavacar(lavacarid);
+     public ResponseEntity<List<ServicoDTO>> getListarServicosLavacar(@RequestParam Integer lavacarid) {
+        List<ServicoDTO> servicos = servicoService.listaServicoLavacar(lavacarid);
         return ResponseEntity.ok(servicos);
     }
 }
