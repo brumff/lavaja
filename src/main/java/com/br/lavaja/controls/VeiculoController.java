@@ -48,9 +48,14 @@ public class VeiculoController {
         return this.veiculoRepository.findById(id).get();
     }
 
-    @GetMapping
+    @GetMapping("/todos-veiculos")
     public ResponseEntity<List<VeiculoModel>> getAllVeiculos() {
         return ResponseEntity.status(HttpStatus.OK).body(veiculoRepository.findAll());
+    }
+    @GetMapping
+    public ResponseEntity<List<VeiculoModel>> listaCarrosLogado() {
+        List<VeiculoModel> veiculos = veiculoService.listaCarrosLogado();
+        return ResponseEntity.ok(veiculos);
     }
 
     @DeleteMapping("/{id}")

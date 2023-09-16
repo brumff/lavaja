@@ -71,13 +71,14 @@ public class VeiculoService {
         }
     }
 
-    public Optional<VeiculoModel> listaCarrosLogado() {
+    public List<VeiculoModel> listaCarrosLogado() {
         UserSS user = UserService.authenticated();
-        VeiculoModel veiculo = veiculoRepository.findById(user.getId())
+        DonoCarroModel donoCarro = donoCarroRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
 
-        return veiculoRepository.findById(veiculo.getId());
+        return veiculoRepository.findByDonoCarroModelAndDeleted(donoCarro, false);
     }
+
      public VeiculoModel findById(Integer id) {
         return veiculoRepository.findById(id).orElse(null);
     }
