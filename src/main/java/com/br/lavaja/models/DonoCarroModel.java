@@ -38,7 +38,7 @@ public class DonoCarroModel {
     private String senha;
     @Size(max = 30, min = 6)
     private String confSenha;
-   
+    private String tokenFirebase;
 
     @Enumerated(EnumType.STRING)
     private Perfil perfis;
@@ -111,7 +111,14 @@ public class DonoCarroModel {
         this.confSenha = confSenha;
     }
 
-   
+    public String getTokenFirebase() {
+        return tokenFirebase;
+    }
+
+    public void setTokenFirebase(String tokenFirebase) {
+        this.tokenFirebase = tokenFirebase;
+    }
+
     public Perfil getPerfis() {
         return this.perfis;
     }

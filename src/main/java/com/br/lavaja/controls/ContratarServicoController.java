@@ -34,21 +34,18 @@ public class ContratarServicoController {
         return new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
     }
 
-    @PreAuthorize("hasAnyRole('DONOCARRO')")
     @GetMapping("/donocarro-servicos")
     public ResponseEntity<List<?>> getListarServicosDonoCarro() {
         List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosDonoCarroLogado();
         return ResponseEntity.ok(servicos);
     }
 
-    @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/lavacar-servicos")
     public ResponseEntity<List<?>> getListarServicosLavacar() {
         List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosLavaCarLogado();
         return ResponseEntity.ok(servicos);
     }
 
-      @PreAuthorize("hasAnyRole('LAVACAR')")
     @GetMapping("/lavacar-servicos-ultimo")
     public ResponseEntity<?> getListarServicosLavacarUltimo() {
         int servicos = contratarServicoService.listaUltimo();

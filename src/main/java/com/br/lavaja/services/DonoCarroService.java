@@ -58,22 +58,26 @@ public class DonoCarroService {
             DonoCarroModel donoCarro = donoCarrOptional.get();
             donoCarro.setNome(newDonoCarro.getNome());
             donoCarro.setTelefone(newDonoCarro.getTelefone());
-            /*
-             * if(!donoCarro.getEmail().equals(newDonoCarro.getEmail())) {
-             * DonoCarroModel existeDonoCarro =
-             * donoCarroRepository.findByEmail(newDonoCarro.getEmail());
-             * if(existeDonoCarro != null) {
-             * throw new DataIntegrityException("E-mail já cadastrado para outro usuário.");
-             * }
-             * }
-             * donoCarro.setEmail(newDonoCarro.getEmail());
-             */
             donoCarro.setGenero(newDonoCarro.getGenero());
 
             DonoCarroModel donoCarroUpdate = donoCarroRepository.save(donoCarro);
             return ResponseEntity.ok().body(donoCarroUpdate);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<DonoCarroModel> saveTokenFirebase(DonoCarroModel newDonoCarro) {
+        UserSS user = UserService.authenticated();
+        Integer id = user.getId();
+        Optional<DonoCarroModel> donoCarrOptional = donoCarroRepository.findById(id);
+        if (donoCarrOptional.isPresent()) {
+            DonoCarroModel donoCarro = donoCarrOptional.get();
+            donoCarro.setTokenFirebase(newDonoCarro.getTokenFirebase());
+             DonoCarroModel donoCarroUpdate = donoCarroRepository.save(donoCarro);
+             return ResponseEntity.ok().body(donoCarroUpdate);
+        } else {
+             return ResponseEntity.notFound().build();
         }
     }
 

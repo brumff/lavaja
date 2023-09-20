@@ -41,6 +41,9 @@ public class ContratarServicoModel {
     @ManyToOne
     @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private ServicoModel servico;
+    @ManyToOne
+    @JoinColumn(name = "veiculo_id", referencedColumnName = "id")
+    private VeiculoModel veiculo;
     private String placaCarro;
     private boolean deleted;
     @Size(max = 15)
@@ -86,7 +89,7 @@ public class ContratarServicoModel {
     public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
     }
-    
+
     public LocalDateTime getDataFinalServico() {
         return dataFinalServico;
     }
@@ -117,6 +120,14 @@ public class ContratarServicoModel {
 
     public void setPlacaCarro(String placaCarro) {
         this.placaCarro = placaCarro;
+    }
+
+    public VeiculoModel getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(VeiculoModel veiculo) {
+        this.veiculo = veiculo;
     }
 
     public boolean isDeleted() {

@@ -16,24 +16,29 @@ public class UserSS implements UserDetails {
     private String email;
     private String senha;
     private Collection<? extends GrantedAuthority> authorities;
+    private String nome;
 
     public UserSS() {
 
     }
 
-    public UserSS(Integer id, String email, String senha, Perfil perfis) {
+    public UserSS(Integer id, String email, String senha, Perfil perfis, String nome) {
         final List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(perfis.getDescricao()));
 
         this.id = id;
         this.email = email;
         this.senha = senha;
         this.authorities = authorities;
+        this.nome = nome;
     }
 
     public Integer getId() {
         return id;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -70,7 +75,7 @@ public class UserSS implements UserDetails {
         return true;
     }
 
-    public boolean hasRole(Perfil perfil){
+    public boolean hasRole(Perfil perfil) {
         return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
     }
 }

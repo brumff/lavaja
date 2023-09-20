@@ -41,12 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              "/api/v1/lavacar/todos",
              "/login",
              "/api/v1/lavacar/{id}",
+             "/api/v1/donocarro",
+             
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {
              "/api/v1/lavacar",
              "/api/v1/donocarro",
-             "/login"
+             "/login",
+             "api/v1/donocarro/tokenfirebase",
+             "api/v1/contratarservico/donocarro"
     };
 
     @Override

@@ -35,17 +35,23 @@ public class DonoCarroController {
     @GetMapping("/")
     public DonoCarroModel getDonoCarro() {
         UserSS user = UserService.authenticated();
-        /*if(user == null || !id.equals(user.getId())) {
-            throw new AuthorizationException("Acesso negado");
-        }*/
+        /*
+         * if(user == null || !id.equals(user.getId())) {
+         * throw new AuthorizationException("Acesso negado");
+         * }
+         */
         return this.donoCarroRepository.findById(user.getId()).get();
     }
 
     @PreAuthorize("hasAnyRole('DONOCARRO')")
     @PutMapping("/")
-    public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro
-           ) {
-                return donoCarroService.updateDonoCarro(newDonoCarro);
+    public ResponseEntity<DonoCarroModel> putDonoCarro(@RequestBody DonoCarroModel newDonoCarro) {
+        return donoCarroService.updateDonoCarro(newDonoCarro);
     }
 
+    @PreAuthorize("hasAnyRole('DONOCARRO')")
+    @PutMapping("/tokenfirebase")
+    public ResponseEntity<DonoCarroModel> tokenFirebase(@RequestBody DonoCarroModel newDonoCarro) {
+        return donoCarroService.saveTokenFirebase(newDonoCarro);
+    }
 }
