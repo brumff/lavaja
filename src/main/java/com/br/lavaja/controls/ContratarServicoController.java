@@ -27,11 +27,21 @@ public class ContratarServicoController {
     private ContratarServicoService contratarServicoService;
 
     @PostMapping
-    public ContratarServicoDTO createDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
-        var donoCarro  = contratarServico.getDonoCarro() == null ? new DonoCarroModel() :  contratarServico.getDonoCarro() ;
+    public ContratarServicoDTO createContratarServ(@RequestBody ContratarServicoModel contratarServico) {
+        var donoCarro = contratarServico.getDonoCarro() == null ? new DonoCarroModel()
+                : contratarServico.getDonoCarro();
         donoCarro.setId(0);
         contratarServico.setDonoCarro(donoCarro);
         return new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
+    }
+
+    @PostMapping("/donocarro")
+    public ContratarServicoDTO createContratarServDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
+        var donoCarro = contratarServico.getDonoCarro() == null ? new DonoCarroModel()
+                : contratarServico.getDonoCarro();
+        donoCarro.setId(0);
+        contratarServico.setDonoCarro(donoCarro);
+        return new ContratarServicoDTO(contratarServicoService.createContratoServicoDonoCarro(contratarServico));
     }
 
     @GetMapping("/donocarro-servicos")

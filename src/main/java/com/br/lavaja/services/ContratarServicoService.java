@@ -72,6 +72,36 @@ public class ContratarServicoService {
         return createContratoServico;
     }
 
+        public ContratarServicoModel createContratoServicoDonoCarro(ContratarServicoModel contratarServico) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        var servico = servicoRepository.findById(contratarServico.getServico().getId());
+        contratarServico.setServico(servico.get());
+        var lavacarId = servico.get().getLavacarId();
+        System.out.println(contratarServico.getServico().getId());
+        System.out.println(lavacarId);
+        var optional = lavacarRepository.findById(lavacarId);
+
+        if (optional.isEmpty()) {
+
+        }
+        var lavacar = optional.get();
+        DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
+        if (donocarro != null) {
+            contratarServico.setDonoCarro(donocarro);
+        } else {
+            DonoCarroModel donoCarroPadrao = new DonoCarroModel();
+            donoCarroPadrao.setId(1);
+            contratarServico.setDonoCarro(donoCarroPadrao);
+        }
+        contratarServico.setStatusServico(StatusServico.AGUARDANDO);
+        ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
+        var tempoFila = listaUltimo();
+        lavacar.setTempoFila((float) tempoFila);
+        System.out.println(tempoFila);
+        lavacarRepository.save(lavacar);
+        return createContratoServico;
+    }
+
     public List<ContratarServicoDTO> listarServicosDonoCarroLogado() {
         UserSS user = UserService.authenticated();
         DonoCarroModel donoCarro = donoCarroRepository.findById(user.getId())
