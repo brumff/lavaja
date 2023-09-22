@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
+import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.ContratarServicoService;
+import com.br.lavaja.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/contratarservico")
@@ -58,7 +60,8 @@ public class ContratarServicoController {
 
     @GetMapping("/lavacar-servicos-ultimo")
     public ResponseEntity<?> getListarServicosLavacarUltimo() {
-        int servicos = contratarServicoService.listaUltimo();
+        UserSS user = UserService.authenticated();
+        int servicos = contratarServicoService.listaUltimo(user.getId());
         return ResponseEntity.ok(servicos);
     }
 

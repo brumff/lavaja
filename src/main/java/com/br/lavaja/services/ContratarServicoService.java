@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.exceptions.AuthorizationException;
+import com.br.lavaja.exceptions.ObjectNotFoundException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
@@ -65,7 +66,7 @@ public class ContratarServicoService {
         }
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo();
+        var tempoFila = listaUltimo(lavacarId);
         lavacar.setTempoFila((float) tempoFila);
         System.out.println(tempoFila);
         lavacarRepository.save(lavacar);
@@ -95,7 +96,7 @@ public class ContratarServicoService {
         }
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo();
+        var tempoFila = listaUltimo(lavacarId);
         lavacar.setTempoFila((float) tempoFila);
         System.out.println(tempoFila);
         lavacarRepository.save(lavacar);
@@ -131,10 +132,9 @@ public class ContratarServicoService {
         return modelList;
     }
 
-    public int listaUltimo() {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+    public int listaUltimo(int lavacarId) {
+        LavacarModel lavaCar = lavacarRepository.findById(lavacarId)
+                .orElseThrow(() -> new ObjectNotFoundException("Lavacar não encontrado"));
         var servicos = contratarServicoRepository.findByLavacar(lavaCar);
 
         var tempoTotal = 0;
