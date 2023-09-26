@@ -7,6 +7,7 @@ import com.br.lavaja.enums.StatusServico;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.ServicoModel;
+import com.br.lavaja.models.VeiculoModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,7 @@ public class ContratarServicoDTO {
     private Integer donoCarroId;
     private String donoCarroNome;
     private ServicoModel servicoId;
+    private VeiculoModel veiculo;
     private String placaCarro;
     private int tempFila;
 
@@ -40,6 +42,7 @@ public class ContratarServicoDTO {
         this.donoCarroId = contratarServico.getDonoCarro().getId();
         this.donoCarroNome = contratarServico.getDonoCarro().getNome();
         this.servicoId = contratarServico.getServico();
+        this.veiculo = contratarServico.getVeiculo();
         this.placaCarro = contratarServico.getPlacaCarro();
         this.tempFila = contratarServico.getTempFila();
     }
@@ -118,6 +121,14 @@ public class ContratarServicoDTO {
 
     public void setServicoId(ServicoModel servicoId) {
         this.servicoId = servicoId;
+    }
+
+      public VeiculoModel getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(VeiculoModel veiculo) {
+        this.veiculo = veiculo;
     }
 
     public int getTempFila() {

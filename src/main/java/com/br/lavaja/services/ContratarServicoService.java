@@ -26,6 +26,7 @@ import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
 import com.br.lavaja.repositories.ServicoRepository;
+import com.br.lavaja.repositories.VeiculoRepository;
 import com.br.lavaja.security.UserSS;
 
 @Service
@@ -42,6 +43,9 @@ public class ContratarServicoService {
 
     @Autowired
     ServicoRepository servicoRepository;
+
+    @Autowired
+    VeiculoRepository veiculoRepository;
 
     public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -78,8 +82,6 @@ public class ContratarServicoService {
         var servico = servicoRepository.findById(contratarServico.getServico().getId());
         contratarServico.setServico(servico.get());
         var lavacarId = servico.get().getLavacarId();
-        System.out.println(contratarServico.getServico().getId());
-        System.out.println(lavacarId);
         var optional = lavacarRepository.findById(lavacarId);
 
         if (optional.isEmpty()) {
@@ -94,11 +96,11 @@ public class ContratarServicoService {
             donoCarroPadrao.setId(1);
             contratarServico.setDonoCarro(donoCarroPadrao);
         }
+        
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
         var tempoFila = listaUltimo(lavacarId);
         lavacar.setTempoFila((float) tempoFila);
-        System.out.println(tempoFila);
         lavacarRepository.save(lavacar);
         return createContratoServico;
     }
@@ -122,7 +124,6 @@ public class ContratarServicoService {
             if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
                 if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
                     var model = entity.converter();
-                    // atribui o tempo de fila
                     model.setTempFila(calcularFila(modelList.size(), list));
                     modelList.add(model);
                 }
