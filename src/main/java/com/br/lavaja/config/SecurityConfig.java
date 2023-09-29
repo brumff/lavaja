@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              "/login",
              "/api/v1/lavacar/{id}",
              "/api/v1/donocarro",
-             
+             "/api/v1/contratarservico/token/**"            
     };
 
     public static final String[] PUBLIC_MATCHERS_POST = {

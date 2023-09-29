@@ -215,4 +215,13 @@ public class ContratarServicoService {
         }
         return tempoTotal;
     }
+
+    public String getTokenFirebaseByDonoCarroId(Integer donoCarroId) {
+        DonoCarroModel donoCarro = donoCarroRepository.findById(donoCarroId).orElse(null);
+        if (donoCarro != null) {
+            return donoCarro.getTokenFirebase();
+        } else {
+            return null;
+        }
+    }
 }

@@ -82,5 +82,15 @@ public class ContratarServicoController {
             @PathVariable Integer id) {
         return contratarServicoService.updateContratarServico(id, newServico);
     }
+   
+    @GetMapping("/token/{donoCarroId}")
+    public ResponseEntity<String> getTokenByDonoCarroId(@PathVariable Integer donoCarroId) {
+        String token = contratarServicoService.getTokenFirebaseByDonoCarroId(donoCarroId);
+        if (token != null) {
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
