@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -22,6 +24,8 @@ public class ServicoModel {
     @NotEmpty(message = "Tempo serviço é obrigatório")
     private Integer tempServico;
     private boolean ativo;
+    
+    @JoinColumn(name = "lavacar_id", referencedColumnName = "id", nullable = true)
     private Integer lavacarId;
 
     public Integer getId() {

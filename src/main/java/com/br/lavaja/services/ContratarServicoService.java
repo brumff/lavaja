@@ -47,6 +47,9 @@ public class ContratarServicoService {
     @Autowired
     VeiculoRepository veiculoRepository;
 
+    @Autowired
+    private FCMService fcmService;
+
     public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var servico = servicoRepository.findById(contratarServico.getServico().getId());
@@ -183,6 +186,8 @@ public class ContratarServicoService {
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
             var lavacarId = contratarServico.getServico().getLavacarId();
             var optional = lavacarRepository.findById(lavacarId);
+            String donocarroTokenFirebase = contratarServico.getDonoCarro().getTokenFirebase();
+            System.out.println(donocarroTokenFirebase);
             if (optional.isEmpty()) {
 
             }
@@ -191,6 +196,10 @@ public class ContratarServicoService {
                 contratarServico.setDataFinalServico(LocalDateTime.now());
                 var tempoFila = lavacar.getTempoFila() - (float) contratarServico.getServico().getTempServico();
                 lavacar.setTempoFila(tempoFila);
+                String donoDoCarroToken = donocarroTokenFirebase;
+                String mensagem = "O serviço foi finalizado com sucesso.";
+                fcmService.enviarNotificacao(donoDoCarroToken, mensagem);
+
             }
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);

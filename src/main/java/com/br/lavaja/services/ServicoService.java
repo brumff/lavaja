@@ -34,6 +34,7 @@ public class ServicoService {
 
     public ServicoModel createServico(ServicoModel servico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
         LavacarModel lavacar = lavacarRepository.findByEmail(username);
         servico.setLavacarId(lavacar.getId());
         ServicoModel createServico = servicoRepository.save(servico);

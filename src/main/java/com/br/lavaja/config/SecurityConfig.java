@@ -50,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              "/api/v1/donocarro",
              "/login",
              "api/v1/donocarro/tokenfirebase",
-             "api/v1/contratarservico/donocarro"
+             "api/v1/contratarservico/donocarro",
+             "/notificacoes/enviar"
     };
 
     @Override
