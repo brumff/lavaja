@@ -80,7 +80,7 @@ public class ContratarServicoService {
         return createContratoServico;
     }
 
-        public ContratarServicoModel createContratoServicoDonoCarro(ContratarServicoModel contratarServico) {
+    public ContratarServicoModel createContratoServicoDonoCarro(ContratarServicoModel contratarServico) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         var servico = servicoRepository.findById(contratarServico.getServico().getId());
         contratarServico.setServico(servico.get());
@@ -99,7 +99,7 @@ public class ContratarServicoService {
             donoCarroPadrao.setId(1);
             contratarServico.setDonoCarro(donoCarroPadrao);
         }
-        
+
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
         var tempoFila = listaUltimo(lavacarId);
@@ -155,7 +155,7 @@ public class ContratarServicoService {
                     continue;
                 }
                 tempoTotal += tempoServico;
-            } 
+            }
         }
         System.out.println(tempoTotal);
         return tempoTotal;
@@ -188,17 +188,20 @@ public class ContratarServicoService {
             var optional = lavacarRepository.findById(lavacarId);
             String donocarroTokenFirebase = contratarServico.getDonoCarro().getTokenFirebase();
             System.out.println(donocarroTokenFirebase);
+
             if (optional.isEmpty()) {
 
             }
             var lavacar = optional.get();
+
             if (newContratarServico.getStatusServico() == StatusServico.FINALIZADO) {
+                
                 contratarServico.setDataFinalServico(LocalDateTime.now());
                 var tempoFila = lavacar.getTempoFila() - (float) contratarServico.getServico().getTempServico();
                 lavacar.setTempoFila(tempoFila);
                 String donoDoCarroToken = donocarroTokenFirebase;
-                String mensagem = "O serviço foi finalizado com sucesso.";
-                fcmService.enviarNotificacao(donoDoCarroToken, mensagem);
+                String mensagem = "Seu carro está limpo e pronto para ser retirado. Sinta o frescor e o brilho da limpeza enquanto você volta para a estrada.";
+                fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
 
             }
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);

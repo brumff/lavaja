@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class FCMService {
 
-    public void enviarNotificacao(String token, String mensagem) {
+    public void enviarNotServFinalizado(String token, String mensagem) {
         Message message = Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
-                        .setTitle("Título da Notificação")
+                        .setTitle("Seu veículo brilha novamente!")
                         .setBody(mensagem)
                         .build())
                 .build();
