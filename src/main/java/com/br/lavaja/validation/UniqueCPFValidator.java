@@ -11,7 +11,7 @@ import com.br.lavaja.repositories.DonoCarroRepository;
 public class UniqueCPFValidator implements ConstraintValidator<UniqueCPF, String> {
 
     @Autowired
-    private DonoCarroRepository donoCarroRepository; // Substitua pelo seu repositório real
+    private DonoCarroRepository donoCarroRepository;
 
     @Override
     public void initialize(UniqueCPF constraintAnnotation) {
