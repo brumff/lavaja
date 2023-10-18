@@ -9,8 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.br.lavaja.enums.Perfil;
+import com.br.lavaja.validation.UniqueCNPJ;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
@@ -22,6 +24,7 @@ public class LavacarModel {
     private Integer id;
     private String imgLavacar;
     @NotEmpty(message = "CNPJ é obrigatório")
+    @UniqueCNPJ
     private String cnpj;
     @NotEmpty(message = "Nome é obrigatório")
     private String nome;

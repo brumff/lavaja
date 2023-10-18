@@ -33,7 +33,7 @@ public class LavacarController {
 
     @PostMapping
     public LavacarModel createLavacar(@RequestBody LavacarModel lavacar) {
-        return lavaCarService.createDonoCarro(lavacar);
+        return lavaCarService.createLavacar(lavacar);
     }
 
     @GetMapping("/todos")

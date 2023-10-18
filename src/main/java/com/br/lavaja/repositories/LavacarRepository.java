@@ -16,9 +16,14 @@ public interface LavacarRepository extends JpaRepository<LavacarModel, Integer> 
 
     LavacarModel findByEmail(String email);
 
+    boolean existsByCnpj(String cnpj);
+
     @Query("SELECT l.id FROM LavacarModel l WHERE l.email = :email")
     Integer findIdByEmail(@Param("email") String email);
 
     @Query("SELECT l FROM LavacarModel l WHERE l.aberto = 1")
      List<LavacarModel> lavacarAberto();
+
+    
+
 }

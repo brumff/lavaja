@@ -25,13 +25,23 @@ public class LavaCarService {
         return new BCryptPasswordEncoder();
     }
 
-    public LavacarModel createDonoCarro(LavacarModel lavacar) {
+    public LavacarModel createLavacar(LavacarModel lavacar) {
         // não permite cadastrar dois e-mails iguais
         LavacarModel existeLavacar = lavacarRepository.findByEmail(lavacar.getEmail());
+
+        boolean existCNPJ = lavacarRepository.existsByCnpj(lavacar.getCnpj());
 
         if (existeLavacar != null) {
             throw new Error("Usuário já existe");
         }
+
+        if (existCNPJ) {
+            throw new Error("CNPJ já cadastrado");
+        }
+        if (lavacar.getSenha().length() < 6 || lavacar.getConfSenha().length() < 6) {
+            throw new Error("Senha deve conter pelo menos 6 caracteres");
+        }
+
         lavacar.setAberto(false);
         lavacar.setSenha(passwordEncoder().encode(lavacar.getSenha()));
         lavacar.setConfSenha(passwordEncoder().encode(lavacar.getConfSenha()));
