@@ -35,6 +35,7 @@ public class UserSS implements UserDetails {
     public Integer getId() {
         return id;
     }
+    
 
     public String getNome() {
         return nome;
@@ -50,7 +51,6 @@ public class UserSS implements UserDetails {
         return senha;
     }
 
-    @Override
     public String getUsername() {
         return email;
     }

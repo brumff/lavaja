@@ -73,6 +73,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		Map<String, Object> userMap = new HashMap<>();
 		userMap.put("id", user.getId());
 		userMap.put("email", user.getUsername());
+		userMap.put("nome", user.getNome());
 		userMap.put("perfil", user.getAuthorities());
 
 		// Converte o objeto em JSON e adiciona ao corpo da resposta
