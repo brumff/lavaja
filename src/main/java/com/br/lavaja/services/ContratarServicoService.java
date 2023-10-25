@@ -39,149 +39,44 @@ public class ContratarServicoService {
     DonoCarroRepository donoCarroRepository;
 
     @Autowired
-    LavacarRepository lavacarRepository;
-
-    @Autowired
     ServicoRepository servicoRepository;
 
     @Autowired
-    VeiculoRepository veiculoRepository;
+    LavacarRepository lavacarRepository;
 
     @Autowired
     private FCMService fcmService;
 
-    public ContratarServicoModel createContratoServico(ContratarServicoModel contratarServico) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        var servico = servicoRepository.findById(contratarServico.getServico().getId());
-        contratarServico.setServico(servico.get());
-        var lavacarId = servico.get().getLavacarId();
-        System.out.println(contratarServico.getServico().getId());
-        System.out.println(lavacarId);
-        var optional = lavacarRepository.findById(lavacarId);
-
-        if (optional.isEmpty()) {
-
-        }
-        var lavacar = optional.get();
-        DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
-        if (donocarro != null) {
-            contratarServico.setDonoCarro(donocarro);
-        } else {
-            DonoCarroModel donoCarroPadrao = new DonoCarroModel();
-            donoCarroPadrao.setId(1);
-            contratarServico.setDonoCarro(donoCarroPadrao);
-        }
-        contratarServico.setStatusServico(StatusServico.AGUARDANDO);
-        ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo(lavacarId);
-        lavacar.setTempoFila((float) tempoFila);
-        System.out.println(tempoFila);
-        lavacarRepository.save(lavacar);
-        return createContratoServico;
-    }
-
-    public ContratarServicoModel createContratoServicoDonoCarro(ContratarServicoModel contratarServico) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ContratarServicoModel contratarServicoLavacar(ContratarServicoModel contratarServico) {
+        // String username =
+        // SecurityContextHolder.getContext().getAuthentication().getName();
         var servico = servicoRepository.findById(contratarServico.getServico().getId());
         contratarServico.setServico(servico.get());
         var lavacarId = servico.get().getLavacarId();
         var optional = lavacarRepository.findById(lavacarId);
-
         if (optional.isEmpty()) {
 
         }
-        var lavacar = optional.get();
-        DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
-        if (donocarro != null) {
-            contratarServico.setDonoCarro(donocarro);
-        } else {
-            DonoCarroModel donoCarroPadrao = new DonoCarroModel();
-            donoCarroPadrao.setId(1);
-            contratarServico.setDonoCarro(donoCarroPadrao);
-        }
 
+        DonoCarroModel donoCarroPadrao = new DonoCarroModel();
+
+        donoCarroPadrao.setId(1);
+        contratarServico.setDonoCarro(donoCarroPadrao);
+        contratarServico.setTempFila(0);
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
-        ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo(lavacarId);
-        lavacar.setTempoFila((float) tempoFila);
-        lavacarRepository.save(lavacar);
-        return createContratoServico;
-    }
 
-    public List<ContratarServicoDTO> listarServicosDonoCarroLogado() {
-        UserSS user = UserService.authenticated();
-        DonoCarroModel donoCarro = donoCarroRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+        ContratarServicoModel contratoServicoLavacar = contratarServicoRepository.save(contratarServico);
+        atualizarTempoDeEspera(optional.get());
 
-        return contratarServicoRepository.findByDonoCarro(donoCarro).stream().map(ContratarServicoModel::converter)
-                .collect(Collectors.toList());
-    }
-
-    public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        var list = contratarServicoRepository.findByLavacar(lavaCar);
-        var modelList = new ArrayList<ContratarServicoDTO>();
-        for (var entity : list) {
-            if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
-                if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
-                    var model = entity.converter();
-                    model.setTempFila(calcularFila(modelList.size(), list));
-                    modelList.add(model);
-                }
-            }
-        }
-        Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
-        return modelList;
-    }
-
-    public int listaUltimo(int lavacarId) {
-        LavacarModel lavaCar = lavacarRepository.findById(lavacarId)
-                .orElseThrow(() -> new ObjectNotFoundException("Lavacar não encontrado"));
-        var servicos = contratarServicoRepository.findByLavacar(lavaCar);
-
-        var tempoTotal = 0;
-
-        for (var servico : servicos) {
-            if (servico != null && servico.getServico() != null) {
-
-                var tempoServico = servico.getServico().getTempServico() == null ? 0
-                        : servico.getServico().getTempServico();
-
-                var tempoDeServico = ChronoUnit.MINUTES.between(servico.getDataServico(), LocalDateTime.now());
-                if (tempoDeServico > servico.getServico().getTempServico()) {
-                    tempoTotal += tempoDeServico;
-                    continue;
-                }
-                tempoTotal += tempoServico;
-            }
-        }
-        System.out.println(tempoTotal);
-        return tempoTotal;
+        return contratoServicoLavacar;
 
     }
 
-    public void softDeleted(ContratarServicoModel contratarServico) {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        contratarServico.setDeleted(true);
-        contratarServicoRepository.save(contratarServico);
-        // atualizarFila(lavaCar.getId());
-    }
-
-    public ContratarServicoModel findById(Integer id) {
-        return contratarServicoRepository.findById(id).orElse(null);
-    }
-
-    public ResponseEntity<ContratarServicoDTO> updateContratarServico(Integer id,
+    public  ResponseEntity<ContratarServicoDTO> updateContratarServicoLavacar(Integer id,
             ContratarServicoModel newContratarServico) {
-        List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
-
             ContratarServicoModel contratarServico = contratarServicoOptional.get();
             contratarServico.setStatusServico(newContratarServico.getStatusServico());
             var lavacarId = contratarServico.getServico().getLavacarId();
@@ -195,37 +90,60 @@ public class ContratarServicoService {
             var lavacar = optional.get();
 
             if (newContratarServico.getStatusServico() == StatusServico.FINALIZADO) {
-                
                 contratarServico.setDataFinalServico(LocalDateTime.now());
                 var tempoFila = lavacar.getTempoFila() - (float) contratarServico.getServico().getTempServico();
                 lavacar.setTempoFila(tempoFila);
                 String donoDoCarroToken = donocarroTokenFirebase;
                 String mensagem = "Seu carro está limpo e pronto para ser retirado. Sinta o frescor e o brilho da limpeza enquanto você volta para a estrada.";
                 fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
-
+                contratarServico.setTempFila(0);
+                lavacarRepository.save(lavacar);
+            }else if(newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM){
+                contratarServico.setTempFila(0);
             }
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
-            lavacarRepository.save(lavacar);
+            atualizarTempoDeEspera(lavacar);
             return ResponseEntity.ok().body(contratarServicoDTO);
-
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     public int calcularFila(int index, List<ContratarServicoModel> list) {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        int tempoTotal = 0;
-        var objetosNaFrente = list.subList(index + 1, list.size());
-        for (var model : objetosNaFrente) {
-            if (model.getServico().getLavacarId().equals(lavaCar.getId()) && !model.isDeleted()) {
-                tempoTotal += model.getServico().getTempServico();
+        var tempoDeEspera = 0;
+
+        for (var contrato : list) {
+            if (!contrato.isDeleted()) {
+                var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
+                        : contrato.getServico().getTempServico();
+
+                if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
+                    var tempoDesdeCriação = ChronoUnit.MINUTES.between(contrato.getDataServico(), LocalDateTime.now());
+
+                    tempoDeEspera += tempoDesdeCriação + tempoDeServico;
+                    continue;
+                } else if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
+                    tempoDeEspera += tempoDeServico;
+                }
             }
         }
-        return tempoTotal;
+
+        return tempoDeEspera;
+    }
+
+    private void atualizarTempoDeEspera(LavacarModel lavacar) {
+        var listadeContratosAtivos = contratarServicoRepository.findByLavacar(lavacar);
+        var modelList = new ArrayList<ContratarServicoModel>();
+        for (var entity : listadeContratosAtivos) {
+            if (!entity.getStatusServico().equals("finalizado")) {
+                modelList.add(entity);
+                entity.setTempFila(calcularFila(modelList.size(), modelList));
+                contratarServicoRepository.save(entity);
+            }
+        }
+
     }
 
     public String getTokenFirebaseByDonoCarroId(Integer donoCarroId) {

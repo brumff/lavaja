@@ -29,6 +29,7 @@ public class ContratarServicoDTO {
     private VeiculoModel veiculo;
     private String placaCarro;
     private int tempFila;
+    private String nomeLavacar;
 
     private static ModelMapper modelMapper = new ModelMapper();
 
@@ -123,7 +124,7 @@ public class ContratarServicoDTO {
         this.servicoId = servicoId;
     }
 
-      public VeiculoModel getVeiculo() {
+    public VeiculoModel getVeiculo() {
         return veiculo;
     }
 
@@ -149,6 +150,14 @@ public class ContratarServicoDTO {
 
     public void setPlacaCarro(String placaCarro) {
         this.placaCarro = placaCarro;
+    }
+
+    public String getNomeLavacar() {
+        return nomeLavacar;
+    }
+
+    public void setNomeLavacar(String nomeLavacar) {
+        this.nomeLavacar = nomeLavacar;
     }
 
     public static ContratarServicoDTO toDTO(ContratarServicoModel contratarServicoModel) {

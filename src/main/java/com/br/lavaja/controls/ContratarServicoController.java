@@ -34,55 +34,15 @@ public class ContratarServicoController {
                 : contratarServico.getDonoCarro();
         donoCarro.setId(0);
         contratarServico.setDonoCarro(donoCarro);
-        return new ContratarServicoDTO(contratarServicoService.createContratoServico(contratarServico));
-    }
-
-    @PostMapping("/donocarro")
-    public ContratarServicoDTO createContratarServDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
-        var donoCarro = contratarServico.getDonoCarro() == null ? new DonoCarroModel()
-                : contratarServico.getDonoCarro();
-        donoCarro.setId(0);
-        contratarServico.setDonoCarro(donoCarro);
-        return new ContratarServicoDTO(contratarServicoService.createContratoServicoDonoCarro(contratarServico));
-    }
-
-    @GetMapping("/donocarro-servicos")
-    public ResponseEntity<List<?>> getListarServicosDonoCarro() {
-        List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosDonoCarroLogado();
-        return ResponseEntity.ok(servicos);
-    }
-
-    @GetMapping("/lavacar-servicos")
-    public ResponseEntity<List<?>> getListarServicosLavacar() {
-        List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosLavaCarLogado();
-        return ResponseEntity.ok(servicos);
-    }
-
-    @GetMapping("/lavacar-servicos-ultimo")
-    public ResponseEntity<?> getListarServicosLavacarUltimo() {
-        UserSS user = UserService.authenticated();
-        int servicos = contratarServicoService.listaUltimo(user.getId());
-        return ResponseEntity.ok(servicos);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> softDeleted(@PathVariable Integer id) {
-        ContratarServicoModel contratarServicoModel = contratarServicoService.findById(id);
-
-        if (contratarServicoModel == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        contratarServicoService.softDeleted(contratarServicoModel);
-        return ResponseEntity.ok("Objeto excluído com sucesso");
+        return new ContratarServicoDTO(contratarServicoService.contratarServicoLavacar(contratarServico));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ContratarServicoDTO> patchContratarServico(@RequestBody ContratarServicoModel newServico,
             @PathVariable Integer id) {
-        return contratarServicoService.updateContratarServico(id, newServico);
+        return contratarServicoService.updateContratarServicoLavacar(id, newServico);
     }
-   
+
     @GetMapping("/token/{donoCarroId}")
     public ResponseEntity<String> getTokenByDonoCarroId(@PathVariable Integer donoCarroId) {
         String token = contratarServicoService.getTokenFirebaseByDonoCarroId(donoCarroId);
