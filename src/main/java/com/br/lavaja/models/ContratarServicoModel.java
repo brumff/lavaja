@@ -34,6 +34,8 @@ public class ContratarServicoModel {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataUpdateServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataFinalServico;
     @ManyToOne
     @JoinColumn(name = "donocarro_id", referencedColumnName = "id", nullable = true)
@@ -48,13 +50,22 @@ public class ContratarServicoModel {
     private boolean deleted;
     @Size(max = 15)
     private String telefone;
-    private int tempFila;
+    private float tempFila;
+    private float tempAtraso;
 
-    public int getTempFila() {
+    public float getTempAtraso() {
+        return tempAtraso;
+    }
+
+    public void setTempAtraso(float tempAtraso) {
+        this.tempAtraso = tempAtraso;
+    }
+
+    public float getTempFila() {
         return tempFila;
     }
 
-    public void setTempFila(int tempFila) {
+    public void setTempFila(float tempFila) {
         this.tempFila = tempFila;
     }
 
@@ -88,6 +99,14 @@ public class ContratarServicoModel {
 
     public void setDataServico(LocalDateTime dataServico) {
         this.dataServico = dataServico;
+    }
+
+    public LocalDateTime getDataUpdateServico() {
+        return dataUpdateServico;
+    }
+
+    public void setDataUpdateServico(LocalDateTime dataUpdateServico) {
+        this.dataUpdateServico = dataUpdateServico;
     }
 
     public LocalDateTime getDataFinalServico() {

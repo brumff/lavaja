@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
+import com.br.lavaja.models.LavacarModel;
 import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.ContratarServicoService;
 import com.br.lavaja.services.UserService;
@@ -36,6 +37,8 @@ public class ContratarServicoController {
         contratarServico.setDonoCarro(donoCarro);
         return new ContratarServicoDTO(contratarServicoService.contratarServicoLavacar(contratarServico));
     }
+
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<ContratarServicoDTO> patchContratarServico(@RequestBody ContratarServicoModel newServico,

@@ -28,7 +28,7 @@ public class ContratarServicoDTO {
     private ServicoModel servicoId;
     private VeiculoModel veiculo;
     private String placaCarro;
-    private int tempFila;
+    private float tempFila;
     private String nomeLavacar;
 
     private static ModelMapper modelMapper = new ModelMapper();
@@ -132,11 +132,11 @@ public class ContratarServicoDTO {
         this.veiculo = veiculo;
     }
 
-    public int getTempFila() {
+    public float getTempFila() {
         return tempFila;
     }
 
-    public void setTempFila(int tempFila) {
+    public void setTempFila(float tempFila) {
         this.tempFila = tempFila;
     }
 
