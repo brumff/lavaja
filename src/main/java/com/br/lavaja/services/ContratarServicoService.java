@@ -99,8 +99,10 @@ public class ContratarServicoService {
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
             }else if(newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM){
-                contratarServico.setTempFila(0);
+                
+                //contratarServico.setTempFila(0);
             }
+            contratarServico.setDataUpdateServico(LocalDateTime.now());
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
             atualizarTempoDeEspera(lavacar);
@@ -125,7 +127,8 @@ public class ContratarServicoService {
                     tempoDeEspera += tempoDesdeCriação + tempoDeServico;
                     continue;
                 } else if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
-                    tempoDeEspera += tempoDeServico;
+                    var tempoLavagem = ChronoUnit.MINUTES.between(contrato.getDataUpdateServico(), LocalDateTime.now());
+                    tempoDeEspera += tempoDeServico + tempoLavagem;
                 }
             }
         }
