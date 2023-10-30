@@ -37,7 +37,7 @@ public class ContratarServicoDTO {
         this.id = contratarServico.getId();
         this.origem = contratarServico.getOrigem();
         this.statusServico = contratarServico.getStatusServico();
-        this.dataServico = contratarServico.getDataServico();
+        this.dataServico = contratarServico.getDataContratacaoServico();
         this.dataFinalServico = contratarServico.getDataFinalServico();
         this.donoCarro = contratarServico.getDonoCarro();
         this.donoCarroId = contratarServico.getDonoCarro().getId();

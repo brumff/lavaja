@@ -71,9 +71,9 @@ public class ContratarServicoServiceOld {
         }
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo(lavacarId);
-        lavacar.setTempoFila((float) tempoFila);
-        System.out.println(tempoFila);
+        //var tempoFila = listaUltimo(lavacarId);
+        //lavacar.setTempoFila((float) tempoFila);
+        //System.out.println(tempoFila);
         lavacarRepository.save(lavacar);
         return createContratoServico;
     }
@@ -100,8 +100,8 @@ public class ContratarServicoServiceOld {
 
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
         ContratarServicoModel createContratoServico = contratarServicoRepository.save(contratarServico);
-        var tempoFila = listaUltimo(lavacarId);
-        lavacar.setTempoFila((float) tempoFila);
+        //var tempoFila = listaUltimo(lavacarId);
+       // lavacar.setTempoFila((float) tempoFila);
         lavacarRepository.save(lavacar);
         return createContratoServico;
     }
@@ -115,27 +115,27 @@ public class ContratarServicoServiceOld {
                 .collect(Collectors.toList());
     }
 
-    public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
-        UserSS user = UserService.authenticated();
-        LavacarModel lavaCar = lavacarRepository.findById(user.getId())
-                .orElseThrow(() -> new AuthorizationException("Acesso negado"));
-        var list = contratarServicoRepository.findByLavacar(lavaCar);
-        var modelList = new ArrayList<ContratarServicoDTO>();
-        for (var entity : list) {
-            if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
-                if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
-                    var model = entity.converter();
-                    model.setTempFila(calcularFila(modelList.size(), list));
-                    modelList.add(model);
-                }
-            }
-        }
+    // public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
+    //     UserSS user = UserService.authenticated();
+    //     LavacarModel lavaCar = lavacarRepository.findById(user.getId())
+    //             .orElseThrow(() -> new AuthorizationException("Acesso negado"));
+    //     var list = contratarServicoRepository.findByLavacar(lavaCar);
+    //     var modelList = new ArrayList<ContratarServicoDTO>();
+    //     for (var entity : list) {
+    //         if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
+    //             if (!entity.getStatusServico().equals("finalizado")) { // Adicionando condição para verificar o status
+    //                 var model = entity.converter();
+    //                 model.setTempFila(calcularFila(modelList.size(), list));
+    //                 modelList.add(model);
+    //             }
+    //         }
+    //     }
 
-        Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
-        return modelList;
-    }
+    //     Collections.sort(modelList, Comparator.comparingInt(ContratarServicoDTO::getTempFila));
+    //     return modelList;
+    // }
 
-    public int listaUltimo(int lavacarId) {
+    /*public int listaUltimo(int lavacarId) {
         LavacarModel lavaCar = lavacarRepository.findById(lavacarId)
                 .orElseThrow(() -> new ObjectNotFoundException("Lavacar não encontrado"));
         var servicos = contratarServicoRepository.findByLavacar(lavaCar);
@@ -160,7 +160,7 @@ public class ContratarServicoServiceOld {
         System.out.println(tempoTotal);
         return tempoTotal;
 
-    }
+    }*/
 
     public void softDeleted(ContratarServicoModel contratarServico) {
         UserSS user = UserService.authenticated();
@@ -177,7 +177,7 @@ public class ContratarServicoServiceOld {
 
     public ResponseEntity<ContratarServicoDTO> updateContratarServico(Integer id,
             ContratarServicoModel newContratarServico) {
-        List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
+       // List<ContratarServicoDTO> servicos = listarServicosLavaCarLogado();
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
@@ -214,7 +214,7 @@ public class ContratarServicoServiceOld {
         }
     }
 
-    public int calcularFila(int index, List<ContratarServicoModel> list) {
+    /*public int calcularFila(int index, List<ContratarServicoModel> list) {
         UserSS user = UserService.authenticated();
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
@@ -241,7 +241,7 @@ public class ContratarServicoServiceOld {
             }
         }
         return tempoTotal;
-    }
+    }*/
 
     public String getTokenFirebaseByDonoCarroId(Integer donoCarroId) {
         DonoCarroModel donoCarro = donoCarroRepository.findById(donoCarroId).orElse(null);

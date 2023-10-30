@@ -72,7 +72,7 @@ public class ContratarServicoService {
 
     }
 
-    public  ResponseEntity<ContratarServicoDTO> updateContratarServicoLavacar(Integer id,
+    public ResponseEntity<ContratarServicoDTO> updateContratarServicoLavacar(Integer id,
             ContratarServicoModel newContratarServico) {
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
@@ -98,11 +98,11 @@ public class ContratarServicoService {
                 fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
-            }else if(newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM){
-                
-                //contratarServico.setTempFila(0);
+            } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM) {
+
+                contratarServico.setTempFila(0);
             }
-            contratarServico.setDataUpdateServico(LocalDateTime.now());
+            // contratarServico.setDataUpdateServico(LocalDateTime.now());
             ContratarServicoModel contratarServicoUpdate = contratarServicoRepository.save(contratarServico);
             ContratarServicoDTO contratarServicoDTO = ContratarServicoDTO.toDTO(contratarServicoUpdate);
             atualizarTempoDeEspera(lavacar);
@@ -117,30 +117,70 @@ public class ContratarServicoService {
         var tempoDeEspera = 0;
 
         for (var contrato : list) {
+
             if (!contrato.isDeleted()) {
                 var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
                         : contrato.getServico().getTempServico();
+                if (list.size() == 1 ) {
+                    var dataFinal = contrato.getDataContratacaoServico().plusMinutes(tempoDeServico);
+                    contrato.setDataPrevisaoServico(dataFinal);
+                    System.err.println(dataFinal);
 
-                if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
-                    var tempoDesdeCriação = ChronoUnit.MINUTES.between(contrato.getDataServico(), LocalDateTime.now());
+                } else {
+                    var tempoServAnterior = +contrato.getServico().getTempServico();
+                    var dataFinal = contrato.getDataContratacaoServico()
+                            .plusMinutes(tempoDeServico + tempoServAnterior);
+                    if (index > 1 && list.get(0) != contrato) {
+                        contrato.setDataPrevisaoServico(dataFinal);
+                    }
 
-                    tempoDeEspera += tempoDesdeCriação + tempoDeServico;
-                    continue;
-                } else if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
-                    var tempoLavagem = ChronoUnit.MINUTES.between(contrato.getDataUpdateServico(), LocalDateTime.now());
-                    tempoDeEspera += tempoDeServico + tempoLavagem;
+                    System.out.println(dataFinal);
                 }
+
             }
+
         }
 
         return tempoDeEspera;
     }
 
+    /*
+     * public int calcularFilaAtraso(int index, List<ContratarServicoModel> list) {
+     * var tempoDeEspera = 0;
+     * 
+     * for (var contrato : list) {
+     * if (!contrato.isDeleted()) {
+     * var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
+     * : contrato.getServico().getTempServico();
+     * 
+     * if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
+     * var tempoDesdeCriação = ChronoUnit.MINUTES.between(contrato.getDataServico(),
+     * LocalDateTime.now());
+     * if (list.size() == 1) {
+     * tempoDeEspera += tempoDesdeCriação;
+     * } else {
+     * tempoDeEspera += tempoDesdeCriação + tempoDeServico;
+     * break;
+     * }
+     * 
+     * } else if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
+     * var tempoLavagem =
+     * ChronoUnit.MINUTES.between(contrato.getDataUpdateServico(),
+     * LocalDateTime.now());
+     * tempoDeEspera += tempoLavagem;
+     * }
+     * }
+     * }
+     * 
+     * return tempoDeEspera;
+     * }
+     */
+
     private void atualizarTempoDeEspera(LavacarModel lavacar) {
         var listadeContratosAtivos = contratarServicoRepository.findByLavacar(lavacar);
         var modelList = new ArrayList<ContratarServicoModel>();
         for (var entity : listadeContratosAtivos) {
-            if (!entity.getStatusServico().equals("finalizado")) {
+            if (!entity.getStatusServico().equals("FINALIZADO")) {
                 modelList.add(entity);
                 entity.setTempFila(calcularFila(modelList.size(), modelList));
                 contratarServicoRepository.save(entity);

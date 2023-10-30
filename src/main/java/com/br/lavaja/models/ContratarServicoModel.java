@@ -32,9 +32,9 @@ public class ContratarServicoModel {
     @Column(name = "status_servico")
     private StatusServico statusServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dataServico;
+    private LocalDateTime dataContratacaoServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dataUpdateServico;
+    private LocalDateTime dataPrevisaoServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataFinalServico;
     @ManyToOne
@@ -51,15 +51,6 @@ public class ContratarServicoModel {
     @Size(max = 15)
     private String telefone;
     private float tempFila;
-    private float tempAtraso;
-
-    public float getTempAtraso() {
-        return tempAtraso;
-    }
-
-    public void setTempAtraso(float tempAtraso) {
-        this.tempAtraso = tempAtraso;
-    }
 
     public float getTempFila() {
         return tempFila;
@@ -93,20 +84,20 @@ public class ContratarServicoModel {
         this.statusServico = statusServico;
     }
 
-    public LocalDateTime getDataServico() {
-        return dataServico;
+    public LocalDateTime getDataContratacaoServico() {
+        return dataContratacaoServico;
     }
 
-    public void setDataServico(LocalDateTime dataServico) {
-        this.dataServico = dataServico;
+    public void setDataContratacaoServico(LocalDateTime dataServico) {
+        this.dataContratacaoServico = dataServico;
     }
 
-    public LocalDateTime getDataUpdateServico() {
-        return dataUpdateServico;
+    public LocalDateTime getDataPrevisaoServico() {
+        return dataPrevisaoServico;
     }
 
-    public void setDataUpdateServico(LocalDateTime dataUpdateServico) {
-        this.dataUpdateServico = dataUpdateServico;
+    public void setDataPrevisaoServico(LocalDateTime dataUpdateServico) {
+        this.dataPrevisaoServico = dataUpdateServico;
     }
 
     public LocalDateTime getDataFinalServico() {
@@ -172,14 +163,14 @@ public class ContratarServicoModel {
 
     // salva a data atual local do contrato do serviço
     public ContratarServicoModel() {
-        this.dataServico = LocalDateTime.now();
+        this.dataContratacaoServico = LocalDateTime.now();
     }
 
     public ContratarServicoModel(ContratarServicoDTO dto) {
         this.id = dto.getId();
         this.origem = dto.getOrigem();
         this.statusServico = dto.getStatusServico();
-        this.dataServico = dto.getDataServico();
+        this.dataContratacaoServico = dto.getDataServico();
         this.dataFinalServico = dto.getDataFinalServico();
         this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId();
