@@ -122,32 +122,34 @@ public class ContratarServicoService {
     public int calcularFila(int index, List<ContratarServicoModel> list) {
         var tempoDeEspera = 0;
         for (var contrato : list) {
+            if (contrato == null) {
+                continue; 
+            }
+           
+
             if (!contrato.isDeleted()) {
-                var tempoDeServico = contrato.getServico().getTempServico() == null ? 0 : contrato.getServico().getTempServico();
-                
+                var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
+                        : contrato.getServico().getTempServico();
                 if (list.size() == 1) {
-              
-                    if (contrato.getDataPrevisaoServico() == null) {
-                        contrato.setDataPrevisaoServico(contrato.getDataContratacaoServico().plusMinutes(tempoDeServico));
-                    }
+                    var dataFinal = contrato.getDataContratacaoServico().plusMinutes(tempoDeServico  );
+                    contrato.setDataPrevisaoServico(dataFinal);
+                    System.err.println(dataFinal);
+
                 } else {
                     var tempoServAnterior = +contrato.getServico().getTempServico();
+                    var dataFinal = contrato.getDataContratacaoServico()
+                            .plusMinutes(tempoDeServico + tempoServAnterior);
                     if (index > 1 && list.get(0) != contrato) {
-                        if (contrato.getDataPrevisaoServico() == null) {
-                            var tempAtraso = ChronoUnit.MINUTES.between(contrato.getDataContratacaoServico(), LocalDateTime.now());
-                            var dataFinal = contrato.getDataContratacaoServico()
-                                    .plusMinutes(tempoDeServico + tempoServAnterior + tempAtraso);
-                            contrato.setDataPrevisaoServico(dataFinal);
-                        }
+                        contrato.setDataPrevisaoServico(dataFinal);
                     }
+
+                    System.out.println(dataFinal);
                 }
-                if (contrato.getDataPrevisaoServico() != null) {
-                   
-                    var tempAtraso = ChronoUnit.MINUTES.between(contrato.getDataPrevisaoServico(), LocalDateTime.now());
-                    tempoDeEspera += tempAtraso;
-                }
+
             }
+
         }
+
         return tempoDeEspera;
     }
 
