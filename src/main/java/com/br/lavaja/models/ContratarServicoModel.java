@@ -51,6 +51,15 @@ public class ContratarServicoModel {
     @Size(max = 15)
     private String telefone;
     private float tempFila;
+    private Integer minutosAdicionais;
+
+    public Integer getMinutosAdicionais() {
+        return minutosAdicionais;
+    }
+
+    public void setMinutosAdicionais(Integer minutosAdicionais) {
+        this.minutosAdicionais = minutosAdicionais;
+    }
 
     public float getTempFila() {
         return tempFila;
@@ -170,7 +179,7 @@ public class ContratarServicoModel {
         this.id = dto.getId();
         this.origem = dto.getOrigem();
         this.statusServico = dto.getStatusServico();
-        this.dataContratacaoServico = dto.getDataServico();
+        this.dataContratacaoServico = dto.getDataContratacaoServico();
         this.dataFinalServico = dto.getDataFinalServico();
         this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId();
