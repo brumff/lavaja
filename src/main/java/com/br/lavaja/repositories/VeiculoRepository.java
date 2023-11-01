@@ -15,8 +15,10 @@ import com.br.lavaja.models.VeiculoModel;
 @Repository
 public interface VeiculoRepository extends JpaRepository<VeiculoModel, Integer> {
 
+
     Optional<VeiculoModel> findByPlaca(String placa);
 
+    @Query("SELECT e FROM VeiculoModel e WHERE e.placa = :placa AND e.deleted = 0")
     boolean existsByPlaca(String placa);
 
     Optional<VeiculoModel> findById(Integer id);
