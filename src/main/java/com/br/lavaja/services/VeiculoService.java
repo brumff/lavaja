@@ -30,10 +30,11 @@ public class VeiculoService {
 
     public VeiculoModel createVeiculo(VeiculoModel veiculo) {
         boolean existPlaca = veiculoRepository.existsByPlaca(veiculo.getPlaca());
-
+    
         if (existPlaca) {
-            throw new Error("Veículo com essa placa já cadastrado");
+            throw new RuntimeException("Veículo com essa placa já cadastrado");
         }
+    
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         DonoCarroModel donocarro = donoCarroRepository.findByEmail(username);
         veiculo.setDonoCarroModel(donocarro);

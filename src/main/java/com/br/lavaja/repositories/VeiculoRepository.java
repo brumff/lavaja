@@ -18,8 +18,8 @@ public interface VeiculoRepository extends JpaRepository<VeiculoModel, Integer> 
 
     Optional<VeiculoModel> findByPlaca(String placa);
 
-    @Query("SELECT e FROM VeiculoModel e WHERE e.placa = :placa AND e.deleted = 0")
-    boolean existsByPlaca(String placa);
+    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM VeiculoModel e WHERE e.placa = :placa AND e.deleted = 0")
+    boolean existsByPlaca(@Param("placa") String placa);
 
     Optional<VeiculoModel> findById(Integer id);
 

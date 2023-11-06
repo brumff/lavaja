@@ -1,34 +1,49 @@
-// package com.br.lavaja.schedules;
+package com.br.lavaja.schedules;
 
-// import java.util.ArrayList;
+import java.util.ArrayList;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-// import com.br.lavaja.enums.StatusServico;
-// import com.br.lavaja.repositories.ContratarServicoRepository;
-// import com.google.rpc.Status;
+import com.br.lavaja.dto.ContratarServicoDTO;
+import com.br.lavaja.enums.StatusServico;
+import com.br.lavaja.models.ContratarServicoModel;
+import com.br.lavaja.repositories.ContratarServicoRepository;
+import com.br.lavaja.repositories.LavacarRepository;
+import com.br.lavaja.services.ContratarServicoService;
+import com.google.rpc.Status;
 
-// import antlr.collections.List;
+import antlr.collections.List;
 
-// @Component
-// public class ContratarServiceShedule {
+@Component
+public class ContratarServiceShedule {
 
-//     @Autowired
-//     ContratarServicoRepository contratarServicoRepository;
+    @Autowired
+    ContratarServicoRepository contratarServicoRepository;
+    @Autowired
+    ContratarServicoService contratarServicoService;
+    @Autowired
+    LavacarRepository lavacarRepository;
 
-//     public void atualizarTempoEspera() {
-//         var status = new ArrayList<StatusServico>();
-//         status.add(StatusServico.AGUARDANDO);
-//         status.add(StatusServico.EM_LAVAGEM);
+    @Async
+     @Scheduled(fixedDelay = 15000, initialDelay = 0)
+    public void atualizarTempoEspera() {
+        var list = lavacarRepository.lavacarAberto();
+        var modelList = new ArrayList<ContratarServicoModel>();
 
-        
-//         var lista = contratarServicoRepository.findByStatusServicoIn(status);
+        list.forEach($ -> {
+            var servicosLavaCar = contratarServicoRepository.findByLavacar($);
+            for (var entity : servicosLavaCar) {
+                if (!entity.getStatusServico().equals("FINALIZADO")) {
+                    modelList.add(entity);
+                    entity.setTempFila(contratarServicoService.calcularFila(modelList.size(), modelList));
+                    contratarServicoRepository.save(entity);
+                }
+            }
+        });
 
-//         for()
-        
+    }
 
-
-//     }
-
-// }
+}

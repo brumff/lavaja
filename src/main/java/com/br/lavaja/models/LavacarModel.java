@@ -183,6 +183,9 @@ public class LavacarModel {
     }
 
     public Float getTempoFila() {
+        if (tempoFila == null) {
+            return 0.0f;
+        }
         return tempoFila;
     }
 

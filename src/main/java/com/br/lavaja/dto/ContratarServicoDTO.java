@@ -21,6 +21,8 @@ public class ContratarServicoDTO {
     private LocalDateTime dataContratacaoServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataFinalServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime atrasado;
     @JsonIgnore
     private DonoCarroModel donoCarro;
     private Integer donoCarroId;
@@ -90,6 +92,13 @@ public class ContratarServicoDTO {
 
     public void setDataFinalServico(LocalDateTime dataFinalServico) {
         this.dataFinalServico = dataFinalServico;
+    }
+     public LocalDateTime getAtrasado() {
+        return atrasado;
+    }
+
+    public void setAtrasado(LocalDateTime atrasado) {
+        this.atrasado = atrasado;
     }
 
     public DonoCarroModel getDonoCarro() {

@@ -36,6 +36,9 @@ public class ContratarServicoModel {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataPrevisaoServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(nullable = true)
+    private LocalDateTime atrasado;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataFinalServico;
     @ManyToOne
     @JoinColumn(name = "donocarro_id", referencedColumnName = "id", nullable = true)
@@ -52,6 +55,13 @@ public class ContratarServicoModel {
     private String telefone;
     private float tempFila;
     private Integer minutosAdicionais;
+     public LocalDateTime getAtrasado() {
+        return atrasado;
+    }
+
+    public void setAtrasado(LocalDateTime atrasado) {
+        this.atrasado = atrasado;
+    }
 
     public Integer getMinutosAdicionais() {
         return minutosAdicionais;
