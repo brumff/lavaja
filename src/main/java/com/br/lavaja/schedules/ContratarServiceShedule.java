@@ -28,20 +28,13 @@ public class ContratarServiceShedule {
     LavacarRepository lavacarRepository;
 
     @Async
-     @Scheduled(fixedDelay = 15000, initialDelay = 0)
+    @Scheduled(fixedDelay = 15000, initialDelay = 0)
     public void atualizarTempoEspera() {
         var list = lavacarRepository.lavacarAberto();
-        var modelList = new ArrayList<ContratarServicoModel>();
 
         list.forEach($ -> {
             var servicosLavaCar = contratarServicoRepository.findByLavacar($);
-            for (var entity : servicosLavaCar) {
-                if (!entity.getStatusServico().equals("FINALIZADO")) {
-                    modelList.add(entity);
-                    entity.setTempFila(contratarServicoService.calcularFila(modelList.size(), modelList));
-                    contratarServicoRepository.save(entity);
-                }
-            }
+            contratarServicoService.calcularFila(servicosLavaCar);
         });
 
     }

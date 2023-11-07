@@ -93,7 +93,7 @@ public class ContratarServicoService {
                 lavacar.setTempoFila(tempoFila);
                 String donoDoCarroToken = donocarroTokenFirebase;
                 String mensagem = "Seu carro está limpo e pronto para ser retirado. Sinta o frescor e o brilho da limpeza enquanto você volta para a estrada.";
-                fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
+                // fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
             } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM) {
@@ -117,72 +117,59 @@ public class ContratarServicoService {
 
     }
 
-    public int calcularFila(int index, List<ContratarServicoModel> list) {
-        var tempoDeEspera = 0;
+    public void calcularFila(List<ContratarServicoModel> list) {
+        var tempoDeContratosAnteriores = 0;
 
-        for (var contrato : list) {
-            // var tempoAtraso =
-            // ChronoUnit.MINUTES.between(contrato.getDataPrevisaoServico(),
-            // LocalDateTime.now());
+        for (int i = 0; i < list.size(); i++) {
+            var now = LocalDateTime.now();
+            var contrato = list.get(i);
+            var dataFinal = contrato.getDataContratacaoServico();
+            var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
+                    : contrato.getServico().getTempServico();
 
-            if (!contrato.isDeleted()) {
+           
 
-                var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
-                        : contrato.getServico().getTempServico();
-
-                var now = LocalDateTime.now();
-                var dataAtraso = contrato.getAtrasado() != null ? contrato.getAtrasado() : null;
-
-                if (list.size() == 1) {
-                    var dataFinal = contrato.getDataContratacaoServico().plusMinutes(tempoDeServico);
-
-                    if (dataAtraso == null) {
-                        contrato.setDataPrevisaoServico(dataFinal);
-                        if (dataFinal.isBefore(now)) {
-                            contrato.setAtrasado(now);
-                        }
-                    }
-
-                    System.err.println(dataFinal);
-
-                } else if (index > 1 && list.get(0) != contrato) {
-                    LocalDateTime dataFinal = null;
-
-                    if (contrato.getDataPrevisaoServico() == null) {
-                        dataFinal = contrato.getDataContratacaoServico()
-                                .plusMinutes(tempoDeServico + tempoDeEspera);
-                    } else {
-                        dataFinal = contrato.getDataPrevisaoServico()
-                                .plusMinutes(tempoDeServico + tempoDeEspera);
-                    }
-                    tempoDeEspera += contrato.getServico().getTempServico();
-
-                    if (dataAtraso == null) {
-                        contrato.setDataPrevisaoServico(dataFinal);
-                        if (dataFinal.isBefore(now)) {
-                            contrato.setAtrasado(now);
-                        }
-                    }
-
-                    System.out.println(dataFinal);
+                if (i == 0) {
+                    dataFinal = dataFinal.plusMinutes(tempoDeServico);
+                    contrato.setDataPrevisaoServico(dataFinal);
+                } else {
+                    dataFinal = dataFinal.plusMinutes(tempoDeServico + tempoDeContratosAnteriores);
+                    contrato.setDataPrevisaoServico(dataFinal);
                 }
 
+                if (dataFinal.isBefore(now) && contrato.getDataFinalServico() == null) {
+                    if (contrato.getStatusServico() != StatusServico.EM_LAVAGEM) {
+                         contrato.setAtrasado(now);
+                    }
+                  
+                }
+
+                if (contrato.getAtrasado() != null) {
+                    if (i != 0) {
+                        contrato.getAtrasado().plusMinutes(tempoDeContratosAnteriores + tempoDeServico);
+                    } else {
+
+                        contrato.getAtrasado().plusMinutes(tempoDeServico);
+                    }
+                }
+
+                tempoDeContratosAnteriores += tempoDeServico;
+
+                contratarServicoRepository.save(contrato);
             }
 
-        }
-
-        return tempoDeEspera;
+        
     }
 
     /*
      * public int calcularFilaAtraso(int index, List<ContratarServicoModel> list) {
      * var tempoDeEspera = 0;
-     * 
+     *
      * for (var contrato : list) {
      * if (!contrato.isDeleted()) {
      * var tempoDeServico = contrato.getServico().getTempServico() == null ? 0
      * : contrato.getServico().getTempServico();
-     * 
+     *
      * if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
      * var tempoDesdeCriação = ChronoUnit.MINUTES.between(contrato.getDataServico(),
      * LocalDateTime.now());
@@ -192,7 +179,7 @@ public class ContratarServicoService {
      * tempoDeEspera += tempoDesdeCriação + tempoDeServico;
      * break;
      * }
-     * 
+     *
      * } else if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
      * var tempoLavagem =
      * ChronoUnit.MINUTES.between(contrato.getDataUpdateServico(),
@@ -201,22 +188,14 @@ public class ContratarServicoService {
      * }
      * }
      * }
-     * 
+     *
      * return tempoDeEspera;
      * }
      */
 
     private void atualizarTempoDeEspera(LavacarModel lavacar) {
         var listadeContratosAtivos = contratarServicoRepository.findByLavacar(lavacar);
-        var modelList = new ArrayList<ContratarServicoModel>();
-        for (var entity : listadeContratosAtivos) {
-            if (!entity.getStatusServico().equals("FINALIZADO")) {
-                modelList.add(entity);
-                entity.setTempFila(calcularFila(modelList.size(), modelList));
-                contratarServicoRepository.save(entity);
-            }
-        }
-
+        calcularFila(listadeContratosAtivos);
     }
 
     public List<ContratarServicoDTO> listarServicosLavaCarLogado() {
@@ -224,19 +203,8 @@ public class ContratarServicoService {
         LavacarModel lavaCar = lavacarRepository.findById(user.getId())
                 .orElseThrow(() -> new AuthorizationException("Acesso negado"));
         var list = contratarServicoRepository.findByLavacar(lavaCar);
-        var modelList = new ArrayList<ContratarServicoDTO>();
-        for (var entity : list) {
-            if (entity.getServico().getLavacarId().equals(lavaCar.getId())) {
-                if (!entity.getStatusServico().equals("finalizado")) {
-                    var model = entity.converter();
-                    model.setTempFila(calcularFila(modelList.size(), list));
-                    modelList.add(model);
-                }
-            }
-        }
 
-        Collections.sort(modelList, Comparator.comparing(ContratarServicoDTO::getDataContratacaoServico));
-        return modelList;
+        return list.stream().map(ContratarServicoModel::converter).collect(Collectors.toList());
     }
 
     public String getTokenFirebaseByDonoCarroId(Integer donoCarroId) {
