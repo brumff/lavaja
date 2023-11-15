@@ -18,6 +18,7 @@ import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
+import com.br.lavaja.schedules.ContratarServiceShedule;
 import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.ContratarServicoService;
 import com.br.lavaja.services.UserService;
@@ -29,6 +30,9 @@ public class ContratarServicoController {
     @Autowired
     private ContratarServicoService contratarServicoService;
 
+    @Autowired
+    private ContratarServiceShedule contratarServiceShedule;
+
     @PostMapping
     public ContratarServicoDTO createContratarServ(@RequestBody ContratarServicoModel contratarServico) {
         var donoCarro = contratarServico.getDonoCarro() == null ? new DonoCarroModel()
@@ -37,8 +41,6 @@ public class ContratarServicoController {
         contratarServico.setDonoCarro(donoCarro);
         return new ContratarServicoDTO(contratarServicoService.contratarServicoLavacar(contratarServico));
     }
-
-
 
     @PatchMapping("/{id}")
     public ResponseEntity<ContratarServicoDTO> patchContratarServico(@RequestBody ContratarServicoModel newServico,
@@ -56,4 +58,14 @@ public class ContratarServicoController {
         }
     }
 
+    @GetMapping("/lavacar-servicos")
+    public ResponseEntity<List<?>> getListarServicosLavacar() {
+        List<ContratarServicoDTO> servicos = contratarServicoService.listarServicosLavaCarLogado();
+        return ResponseEntity.ok(servicos);
+    }
+
+    @GetMapping("/atualizar-tempo-espera")
+    public void atualizarTempoEspera() {
+        contratarServiceShedule.atualizarTempoEspera();
+    }
 }

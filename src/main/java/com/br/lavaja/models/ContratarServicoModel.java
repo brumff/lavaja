@@ -55,29 +55,9 @@ public class ContratarServicoModel {
     private String telefone;
     private float tempFila;
     private Integer minutosAdicionais;
-     public LocalDateTime getAtrasado() {
-        return atrasado;
-    }
+    
+ 
 
-    public void setAtrasado(LocalDateTime atrasado) {
-        this.atrasado = atrasado;
-    }
-
-    public Integer getMinutosAdicionais() {
-        return minutosAdicionais;
-    }
-
-    public void setMinutosAdicionais(Integer minutosAdicionais) {
-        this.minutosAdicionais = minutosAdicionais;
-    }
-
-    public float getTempFila() {
-        return tempFila;
-    }
-
-    public void setTempFila(float tempFila) {
-        this.tempFila = tempFila;
-    }
 
     public Integer getId() {
         return id;
@@ -107,16 +87,24 @@ public class ContratarServicoModel {
         return dataContratacaoServico;
     }
 
-    public void setDataContratacaoServico(LocalDateTime dataServico) {
-        this.dataContratacaoServico = dataServico;
+    public void setDataContratacaoServico(LocalDateTime dataContratacaoServico) {
+        this.dataContratacaoServico = dataContratacaoServico;
     }
 
     public LocalDateTime getDataPrevisaoServico() {
         return dataPrevisaoServico;
     }
 
-    public void setDataPrevisaoServico(LocalDateTime dataUpdateServico) {
-        this.dataPrevisaoServico = dataUpdateServico;
+    public void setDataPrevisaoServico(LocalDateTime dataPrevisaoServico) {
+        this.dataPrevisaoServico = dataPrevisaoServico;
+    }
+
+    public LocalDateTime getAtrasado() {
+        return atrasado;
+    }
+
+    public void setAtrasado(LocalDateTime atrasado) {
+        this.atrasado = atrasado;
     }
 
     public LocalDateTime getDataFinalServico() {
@@ -143,20 +131,20 @@ public class ContratarServicoModel {
         this.servico = servico;
     }
 
-    public String getPlacaCarro() {
-        return placaCarro;
-    }
-
-    public void setPlacaCarro(String placaCarro) {
-        this.placaCarro = placaCarro;
-    }
-
     public VeiculoModel getVeiculo() {
         return veiculo;
     }
 
     public void setVeiculo(VeiculoModel veiculo) {
         this.veiculo = veiculo;
+    }
+
+    public String getPlacaCarro() {
+        return placaCarro;
+    }
+
+    public void setPlacaCarro(String placaCarro) {
+        this.placaCarro = placaCarro;
     }
 
     public boolean isDeleted() {
@@ -175,6 +163,22 @@ public class ContratarServicoModel {
         this.telefone = telefone;
     }
 
+    public float getTempFila() {
+        return tempFila;
+    }
+
+    public void setTempFila(float tempFila) {
+        this.tempFila = tempFila;
+    }
+
+    public Integer getMinutosAdicionais() {
+        return minutosAdicionais;
+    }
+
+    public void setMinutosAdicionais(Integer minutosAdicionais) {
+        this.minutosAdicionais = minutosAdicionais;
+    }
+
     // converte ContratoServicoModel para DTO
     public ContratarServicoDTO converter() {
         return new ContratarServicoDTO(this);
@@ -191,6 +195,8 @@ public class ContratarServicoModel {
         this.statusServico = dto.getStatusServico();
         this.dataContratacaoServico = dto.getDataContratacaoServico();
         this.dataFinalServico = dto.getDataFinalServico();
+        this.dataPrevisaoServico = dto.getDataPrevisaoServico();
+        this.atrasado = dto.getAtrasado();
         this.donoCarro = dto.getDonoCarro();
         this.servico = dto.getServicoId();
         this.tempFila = dto.getTempFila();

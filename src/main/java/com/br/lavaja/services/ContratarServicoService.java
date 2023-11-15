@@ -71,7 +71,7 @@ public class ContratarServicoService {
     }
 
     public ResponseEntity<ContratarServicoDTO> updateContratarServicoLavacar(Integer id,
-                                                                             ContratarServicoModel newContratarServico) {
+            ContratarServicoModel newContratarServico) {
 
         Optional<ContratarServicoModel> contratarServicoOptional = contratarServicoRepository.findById(id);
         if (contratarServicoOptional.isPresent()) {
@@ -96,13 +96,18 @@ public class ContratarServicoService {
                 // fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
-            } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM) {
+            } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM
+                    && newContratarServico.getDataPrevisaoServico() != null
+                    && newContratarServico.getDataPrevisaoServico().isBefore(LocalDateTime.now())) {
                 int minutosAdicionais = newContratarServico.getMinutosAdicionais();
 
                 if (minutosAdicionais > 0) {
-                    var atrasado = contratarServico.getAtrasado() != null ? contratarServico.getAtrasado().plusMinutes(minutosAdicionais) :
-                            contratarServico.getDataPrevisaoServico().plusMinutes(minutosAdicionais);
+                    var atrasado = contratarServico.getAtrasado() != null
+                            ? contratarServico.getAtrasado().plusMinutes(minutosAdicionais)
+                            : contratarServico.getDataPrevisaoServico().plusMinutes(minutosAdicionais);
+                    // seta atraso
                     contratarServico.setAtrasado(atrasado);
+
                     System.out.println(atrasado);
                     contratarServico.setTempFila(0);
                 }
@@ -120,9 +125,11 @@ public class ContratarServicoService {
 
     public void calcularFila(List<ContratarServicoModel> list) {
         var tempoDeContratosAnteriores = 0;
-        LocalDateTime dataDePrevisaoAnterior =  null;
+        LocalDateTime dataDePrevisaoAnterior = null;
         LocalDateTime dataAtraso = null;
         LocalDateTime dataFinalizado = null;
+        StatusServico statusAnterior = null;
+        LocalDateTime dataFinalizadoAnterior = null;
 
         for (int i = 0; i < list.size(); i++) {
             var now = LocalDateTime.now();
@@ -135,64 +142,73 @@ public class ContratarServicoService {
                 dataFinal = dataFinal.plusMinutes(tempoDeServico);
                 contrato.setDataPrevisaoServico(dataFinal);
             } else {
-                if(dataDePrevisaoAnterior != null && contrato.getAtrasado() == null && contrato.getDataContratacaoServico().isBefore(dataDePrevisaoAnterior)){
+                if (dataDePrevisaoAnterior != null && contrato.getAtrasado() == null
+                        && contrato.getDataContratacaoServico().isBefore(dataDePrevisaoAnterior)) {
                     dataFinal = dataDePrevisaoAnterior.plusMinutes(tempoDeServico);
-                }else{
+                } else if (statusAnterior != StatusServico.FINALIZADO) {
                     dataFinal = dataFinal.plusMinutes(tempoDeServico + tempoDeContratosAnteriores);
+                } else {
+                    dataFinal = dataFinal.plusMinutes(tempoDeServico);
+
                 }
+                //setou a data final corretamente
                 contrato.setDataPrevisaoServico(dataFinal);
             }
-
+            // seta atraso, data atual + tempo de serviço para finalizar
             if (dataFinal.isBefore(now) && contrato.getDataFinalServico() == null) {
                 if (contrato.getStatusServico() != StatusServico.EM_LAVAGEM && dataFinalizado == null) {
-                    contrato.setAtrasado(now);
+                    contrato.setAtrasado(now.plusMinutes(tempoDeServico));
                 }
             }
 
-            if(contrato.getStatusServico() != StatusServico.EM_LAVAGEM){
-                if(dataFinalizado != null && dataFinalizado.plusMinutes(tempoDeServico).isAfter(now) && contrato.getDataFinalServico() == null){
-                    dataAtraso = dataFinalizado;
-                }else if(dataFinalizado != null && !dataFinalizado.plusMinutes(tempoDeServico).isAfter(now) && contrato.getDataFinalServico() == null){
-                    dataAtraso = now;
+            if (contrato.getStatusServico() != StatusServico.EM_LAVAGEM) {
+                if (dataFinalizado != null && dataFinalizado.plusMinutes(tempoDeServico).isAfter(now)
+                        && contrato.getDataFinalServico() == null) {
+                    // mexi aqui
+                    dataAtraso = dataFinalizado.plusMinutes(tempoDeServico);
+                } else if (dataFinalizado != null && !dataFinalizado.plusMinutes(tempoDeServico).isAfter(now)
+                        && contrato.getDataFinalServico() == null) {
+                    dataAtraso = now.plusMinutes(tempoDeServico);
+                }
+                // seta atraso
+                if (dataAtraso != null
+                        && contrato.getDataPrevisaoServico().isBefore(dataAtraso.plusMinutes(tempoDeServico))) {
+                            //somando novamente tempo de serviço. mexi aqui
+                    contrato.setAtrasado(dataAtraso);
                 }
 
-                if(dataAtraso != null && contrato.getDataPrevisaoServico().isBefore(dataAtraso.plusMinutes(tempoDeServico))){
-                    contrato.setAtrasado(dataAtraso.plusMinutes(tempoDeServico));
-                }
-
-                if(dataFinalizado != null && contrato.getAtrasado() == null){
+                if (dataFinalizado != null && contrato.getAtrasado() == null
+                        && contrato.getDataPrevisaoServico().isBefore(LocalDateTime.now())) {
                     dataFinal = dataFinalizado.plusMinutes(tempoDeServico);
                     contrato.setDataPrevisaoServico(dataFinal);
                 }
             }
 
             if (contrato.getAtrasado() != null) {
-                dataAtraso = contrato.getAtrasado();
+                // mexi aqui tb
+                dataAtraso = contrato.getAtrasado().plusMinutes(tempoDeServico);
 
-                if (i != 0) {
-                    contrato.getAtrasado().plusMinutes(tempoDeContratosAnteriores + tempoDeServico);
-                } else {
-
-                    contrato.getAtrasado().plusMinutes(tempoDeServico);
-                }
-            }else {
+                // if (i != 0) {
+                // contrato.getAtrasado().plusMinutes(tempoDeContratosAnteriores +
+                // tempoDeServico);
+                // }
+            } else {
                 dataAtraso = null;
             }
 
-            if(contrato.getDataPrevisaoServico() != null){
+            if (contrato.getDataPrevisaoServico() != null) {
                 dataDePrevisaoAnterior = contrato.getDataPrevisaoServico();
+                dataFinalizadoAnterior = contrato.getDataFinalServico();
+                statusAnterior = contrato.getStatusServico();
             }
 
-            if(contrato.getDataFinalServico() != null)
+            if (contrato.getDataFinalServico() != null)
                 dataFinalizado = contrato.getDataFinalServico();
-
-
 
             tempoDeContratosAnteriores += tempoDeServico;
 
             contratarServicoRepository.save(contrato);
         }
-
 
     }
 

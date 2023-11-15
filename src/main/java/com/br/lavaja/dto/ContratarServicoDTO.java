@@ -20,6 +20,8 @@ public class ContratarServicoDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataContratacaoServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataPrevisaoServico;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataFinalServico;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime atrasado;
@@ -41,6 +43,8 @@ public class ContratarServicoDTO {
         this.statusServico = contratarServico.getStatusServico();
         this.dataContratacaoServico = contratarServico.getDataContratacaoServico();
         this.dataFinalServico = contratarServico.getDataFinalServico();
+        this.dataPrevisaoServico = contratarServico.getDataPrevisaoServico();
+        this.atrasado = contratarServico.getAtrasado();
         this.donoCarro = contratarServico.getDonoCarro();
         this.donoCarroId = contratarServico.getDonoCarro().getId();
         this.donoCarroNome = contratarServico.getDonoCarro().getNome();
@@ -93,7 +97,16 @@ public class ContratarServicoDTO {
     public void setDataFinalServico(LocalDateTime dataFinalServico) {
         this.dataFinalServico = dataFinalServico;
     }
-     public LocalDateTime getAtrasado() {
+
+    public LocalDateTime getDataPrevisaoServico() {
+        return dataPrevisaoServico;
+    }
+
+    public void setDataPrevisaoServico(LocalDateTime dataPrevisaoServico) {
+        this.dataPrevisaoServico = dataPrevisaoServico;
+    }
+
+    public LocalDateTime getAtrasado() {
         return atrasado;
     }
 
