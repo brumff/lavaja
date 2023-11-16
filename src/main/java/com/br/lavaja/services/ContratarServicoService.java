@@ -150,7 +150,10 @@ public class ContratarServicoService {
 
                 }
                 // setou a data final corretamente
-                contrato.setDataPrevisaoServico(dataFinal);
+                if (contrato.getAtrasado() == null) {
+                    contrato.setDataPrevisaoServico(dataFinal);
+                }
+
             }
             // seta atraso, data atual + tempo de serviço para finalizar
             if (dataFinal.isBefore(now) && contrato.getDataFinalServico() == null) {
@@ -175,11 +178,11 @@ public class ContratarServicoService {
                     contrato.setAtrasado(dataAtraso);
                 }
 
-                if (dataFinalizado != null && contrato.getAtrasado() == null
-                        && contrato.getDataPrevisaoServico().isBefore(LocalDateTime.now())) {
-                    dataFinal = dataFinalizado.plusMinutes(tempoDeServico);
-                    contrato.setDataPrevisaoServico(dataFinal);
-                }
+                // if (dataFinalizado != null && contrato.getAtrasado() == null
+                // && contrato.getDataPrevisaoServico().isBefore(LocalDateTime.now())) {
+                // dataFinal = dataFinalizado.plusMinutes(tempoDeServico);
+                // contrato.setDataPrevisaoServico(dataFinal);
+                // }
             }
 
             if (contrato.getAtrasado() != null) {
@@ -200,8 +203,11 @@ public class ContratarServicoService {
                 statusAnterior = contrato.getStatusServico();
             }
 
-            if (contrato.getDataFinalServico() != null)
+            if (contrato.getDataFinalServico() != null) {
                 dataFinalizado = contrato.getDataFinalServico();
+            } else {
+                dataFinalizado = null;
+            }
 
             tempoDeContratosAnteriores += tempoDeServico;
 
