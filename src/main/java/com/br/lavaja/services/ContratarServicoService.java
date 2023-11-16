@@ -96,9 +96,7 @@ public class ContratarServicoService {
                 // fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
-            } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM
-                    && newContratarServico.getDataPrevisaoServico() != null
-                    && newContratarServico.getDataPrevisaoServico().isBefore(LocalDateTime.now())) {
+            } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM) {
                 int minutosAdicionais = newContratarServico.getMinutosAdicionais();
 
                 if (minutosAdicionais > 0) {
@@ -151,7 +149,7 @@ public class ContratarServicoService {
                     dataFinal = dataFinal.plusMinutes(tempoDeServico);
 
                 }
-                //setou a data final corretamente
+                // setou a data final corretamente
                 contrato.setDataPrevisaoServico(dataFinal);
             }
             // seta atraso, data atual + tempo de serviço para finalizar
@@ -173,7 +171,7 @@ public class ContratarServicoService {
                 // seta atraso
                 if (dataAtraso != null
                         && contrato.getDataPrevisaoServico().isBefore(dataAtraso.plusMinutes(tempoDeServico))) {
-                            //somando novamente tempo de serviço. mexi aqui
+                    // somando novamente tempo de serviço. mexi aqui
                     contrato.setAtrasado(dataAtraso);
                 }
 
