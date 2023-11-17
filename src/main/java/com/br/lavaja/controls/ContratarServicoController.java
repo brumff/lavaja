@@ -18,6 +18,7 @@ import com.br.lavaja.dto.ContratarServicoDTO;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
+import com.br.lavaja.repositories.LavacarRepository;
 import com.br.lavaja.schedules.ContratarServiceShedule;
 import com.br.lavaja.security.UserSS;
 import com.br.lavaja.services.ContratarServicoService;
@@ -40,6 +41,11 @@ public class ContratarServicoController {
         donoCarro.setId(0);
         contratarServico.setDonoCarro(donoCarro);
         return new ContratarServicoDTO(contratarServicoService.contratarServicoLavacar(contratarServico));
+    }
+
+    @GetMapping
+    public void debug(){
+        contratarServiceShedule.atualizarTempoEspera();
     }
 
     @PatchMapping("/{id}")
