@@ -165,7 +165,7 @@ public class ContratarServicoService {
             var dataInicial = contrato.getDataContratacaoServico();
             LocalDateTime dataPrevisao = contrato.getDataPrevisaoServico();
 
-            if(contrato.getAtrasado() != null){
+            if (contrato.getAtrasado() != null) {
                 contrato.setAtrasado(contrato.getAtrasado().plusMinutes(tempoDeServico));
             }
 
@@ -174,7 +174,10 @@ public class ContratarServicoService {
                 if (dataDePrevisaoAnterior != null && contrato.getAtrasado() == null
                         && dataInicial.isBefore(dataDePrevisaoAnterior)) {
                     dataPrevisao = dataDePrevisaoAnterior.plusMinutes(tempoDeServico);
-                }
+                } /* [2.1] */ else if (dataDeAtrasoAnterior != null && dataPrevisao == null) {
+                    dataPrevisao = dataDeAtrasoAnterior.plusMinutes(tempoDeServico);
+                    contrato.setDataPrevisaoServico(dataPrevisao);
+                } 
                 // [1.2]
                 else {
                     dataPrevisao = dataInicial.plusMinutes(tempoDeServico);
@@ -183,28 +186,28 @@ public class ContratarServicoService {
                 contrato.setDataPrevisaoServico(dataPrevisao);
             }
 
-            if(dataPrevisao == null){
+            if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
+                /* [2] */
+                if(dataDeAtrasoAnterior != null && dataDeAtrasoAnterior.plusMinutes(tempoDeServico).isAfter(contrato.getDataPrevisaoServico()) ) {
+                    contrato.setAtrasado(dataDeAtrasoAnterior.plusMinutes(tempoDeServico));
+                } else  if (now.isAfter(dataPrevisao)) {
+                    contrato.setAtrasado(now.plusMinutes(tempoDeServico));
+                }
+            }
+
+            if (dataPrevisao == null) {
                 dataPrevisao = dataInicial.plusMinutes(tempoDeServico);
                 contrato.setDataPrevisaoServico(dataPrevisao);
                 log.info("FALLBACK case {}", contrato.getId());
             }
 
-            // [2]
-            if(contrato.getStatusServico() == StatusServico.AGUARDANDO){
-                // [2.1]
-                if(dataDeFinalizadoAnterior != null && dataDeFinalizadoAnterior.plusMinutes(tempoDeServico).isAfter(now)){
-                    dataPrevisao = dataDeFinalizadoAnterior.plusMinutes(tempoDeServico);
-                    contrato.setDataPrevisaoServico(dataPrevisao);
-                }else if(now.isAfter(dataPrevisao)){
-                    contrato.setAtrasado(now.plusMinutes(tempoDeServico));
-                }
-            }
+            statusAnterior = contrato.getStatusServico();
+            if (statusAnterior != StatusServico.FINALIZADO)
+                dataDeAtrasoAnterior = contrato.getAtrasado();
 
             dataDePrevisaoAnterior = contrato.getDataPrevisaoServico();
-            statusAnterior = contrato.getStatusServico();
-            if(contrato.getStatusServico() == StatusServico.FINALIZADO){
+            if (contrato.getStatusServico() == StatusServico.FINALIZADO)
                 dataDeFinalizadoAnterior = contrato.getDataFinalServico();
-            }
 
             tempoDeContratosAnteriores += tempoDeServico;
             contratarServicoRepository.save(contrato);
