@@ -47,6 +47,9 @@ public class ContratarServicoService {
     @Autowired
     LavacarRepository lavacarRepository;
 
+     @Autowired
+    VeiculoRepository veiculoRepository;
+
     @Autowired
     private FCMService fcmService;
 
@@ -55,6 +58,7 @@ public class ContratarServicoService {
         contratarServico.setServico(servico.get());
         var lavacarId = servico.get().getLavacarId();
         var optional = lavacarRepository.findById(lavacarId);
+        var veiculo = veiculoRepository.findById(contratarServico.getVeiculo().getId());
         if (optional.isEmpty()) {
 
         }
@@ -65,6 +69,9 @@ public class ContratarServicoService {
         contratarServico.setDonoCarro(donoCarroPadrao);
         contratarServico.setTempFila(0);
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
+        System.out.println(contratarServico.getVeiculo());
+        System.out.println(veiculo.get().getPlaca());
+        contratarServico.setPlacaCarro(veiculo.get().getPlaca());
 
         ContratarServicoModel contratoServicoLavacar = contratarServicoRepository.save(contratarServico);
         atualizarTempoDeEspera(optional.get());
