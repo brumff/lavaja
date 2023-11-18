@@ -164,21 +164,25 @@ public class ContratarServicoService {
 
             var dataInicial = contrato.getDataContratacaoServico();
             LocalDateTime dataPrevisao = contrato.getDataPrevisaoServico();
-
-            if (contrato.getAtrasado() != null) {
+            // está atualizando a data de atraso, caso já esteja atrasado
+            if (contrato.getAtrasado() != null && contrato.getStatusServico() == StatusServico.AGUARDANDO) {
                 contrato.setAtrasado(contrato.getAtrasado().plusMinutes(tempoDeServico));
             }
 
             if (dataPrevisao == null && contrato.getStatusServico() == StatusServico.AGUARDANDO) {
                 // [1.1]
+                // adiciona data de previsão 2 >
                 if (dataDePrevisaoAnterior != null && contrato.getAtrasado() == null
                         && dataInicial.isBefore(dataDePrevisaoAnterior)) {
                     dataPrevisao = dataDePrevisaoAnterior.plusMinutes(tempoDeServico);
-                } /* [2.1] */ else if (dataDeAtrasoAnterior != null && dataPrevisao == null) {
+                } /* [2.1] */
+                // adiciona previsão caso anteior esteja atrasado
+                else if (dataDeAtrasoAnterior != null && dataPrevisao == null) {
                     dataPrevisao = dataDeAtrasoAnterior.plusMinutes(tempoDeServico);
                     contrato.setDataPrevisaoServico(dataPrevisao);
-                } 
+                }
                 // [1.2]
+                // adiciona data de previsão
                 else {
                     dataPrevisao = dataInicial.plusMinutes(tempoDeServico);
                 }
@@ -188,11 +192,18 @@ public class ContratarServicoService {
 
             if (contrato.getStatusServico() == StatusServico.AGUARDANDO) {
                 /* [2] */
-                if(dataDeAtrasoAnterior != null && dataDeAtrasoAnterior.plusMinutes(tempoDeServico).isAfter(contrato.getDataPrevisaoServico()) ) {
+                // inclui data atraso com base se o anterior está atrasado
+                if (dataDeAtrasoAnterior != null && dataDeAtrasoAnterior.plusMinutes(tempoDeServico)
+                        .isAfter(contrato.getDataPrevisaoServico())) {
                     contrato.setAtrasado(dataDeAtrasoAnterior.plusMinutes(tempoDeServico));
-                } else  if (now.isAfter(dataPrevisao)) {
+                } // inclui data de atraso
+                else if (now.isAfter(dataPrevisao)) {
                     contrato.setAtrasado(now.plusMinutes(tempoDeServico));
                 }
+            }
+
+            if(contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
+
             }
 
             if (dataPrevisao == null) {
