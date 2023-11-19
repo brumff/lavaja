@@ -53,7 +53,7 @@ public class ServicoService {
             }
             servico.setNome(newServico.getNome());
             servico.setValor(newServico.getValor());
-            servico.setTamCarro(newServico.getTamCarro());
+            // servico.setTamCarro(newServico.getTamCarro());
             servico.setTempServico(newServico.getTempServico());
             servico.setAtivo(newServico.isAtivo());
 
@@ -86,7 +86,7 @@ public class ServicoService {
         dto.setId(servico.getId());
         dto.setNome(servico.getNome());
         dto.setValor(servico.getValor());
-        dto.setTamCarro(servico.getTamCarro());
+        // dto.setTamCarro(servico.getTamCarro());
         dto.setTempServico(servico.getTempServico());
         dto.setAtivo(servico.isAtivo());
         

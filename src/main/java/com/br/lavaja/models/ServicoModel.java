@@ -20,7 +20,7 @@ public class ServicoModel {
     private String nome;
     @NotEmpty(message = "Valor é obrigatório")
     private Double valor;
-    private String tamCarro;
+    // private String tamCarro;
     @NotEmpty(message = "Tempo serviço é obrigatório")
     private Integer tempServico;
     private boolean ativo;
@@ -52,13 +52,13 @@ public class ServicoModel {
         this.valor = valor;
     }
 
-    public String getTamCarro() {
-        return tamCarro;
-    }
+    // public String getTamCarro() {
+    //     return tamCarro;
+    // }
 
-    public void setTamCarro(String tamCarro) {
-        this.tamCarro = tamCarro;
-    }
+    // public void setTamCarro(String tamCarro) {
+    //     this.tamCarro = tamCarro;
+    // }
 
     public Integer getTempServico() {
         return tempServico;

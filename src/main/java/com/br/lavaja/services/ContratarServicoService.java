@@ -22,6 +22,7 @@ import com.br.lavaja.exceptions.ObjectNotFoundException;
 import com.br.lavaja.models.ContratarServicoModel;
 import com.br.lavaja.models.DonoCarroModel;
 import com.br.lavaja.models.LavacarModel;
+import com.br.lavaja.models.VeiculoModel;
 import com.br.lavaja.repositories.ContratarServicoRepository;
 import com.br.lavaja.repositories.DonoCarroRepository;
 import com.br.lavaja.repositories.LavacarRepository;
@@ -47,7 +48,7 @@ public class ContratarServicoService {
     @Autowired
     LavacarRepository lavacarRepository;
 
-     @Autowired
+    @Autowired
     VeiculoRepository veiculoRepository;
 
     @Autowired
@@ -58,7 +59,7 @@ public class ContratarServicoService {
         contratarServico.setServico(servico.get());
         var lavacarId = servico.get().getLavacarId();
         var optional = lavacarRepository.findById(lavacarId);
-        var veiculo = veiculoRepository.findById(contratarServico.getVeiculo().getId());
+
         if (optional.isEmpty()) {
 
         }
@@ -67,11 +68,62 @@ public class ContratarServicoService {
 
         donoCarroPadrao.setId(1);
         contratarServico.setDonoCarro(donoCarroPadrao);
-        contratarServico.setTempFila(0);
         contratarServico.setStatusServico(StatusServico.AGUARDANDO);
-        System.out.println(contratarServico.getVeiculo());
-        System.out.println(veiculo.get().getPlaca());
-        contratarServico.setPlacaCarro(veiculo.get().getPlaca());
+
+        VeiculoModel veiculo = contratarServico.getVeiculo();
+        if (veiculo != null) {
+            if (veiculo.getId() != null) {
+                var veiculoOptional = veiculoRepository.findById(veiculo.getId());
+                if (veiculoOptional.isPresent()) {
+                    contratarServico.setPlacaCarro(veiculoOptional.get().getPlaca());
+                } else {
+
+                }
+            } else {
+
+            }
+        } else {
+
+        }
+
+        ContratarServicoModel contratoServicoLavacar = contratarServicoRepository.save(contratarServico);
+        atualizarTempoDeEspera(optional.get());
+
+        return contratoServicoLavacar;
+
+    }
+
+    public ContratarServicoModel contratarServicoDonoCarro(ContratarServicoModel contratarServico) {
+        var servico = servicoRepository.findById(contratarServico.getServico().getId());
+        contratarServico.setServico(servico.get());
+        var lavacarId = servico.get().getLavacarId();
+        var optional = lavacarRepository.findById(lavacarId);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        DonoCarroModel donoCarro = donoCarroRepository.findByEmail(username);
+
+        if (optional.isEmpty()) {
+
+        }
+
+        contratarServico.setDonoCarro(donoCarro);
+
+        contratarServico.setStatusServico(StatusServico.AGUARDANDO);
+
+        VeiculoModel veiculo = contratarServico.getVeiculo();
+        if (veiculo != null) {
+            if (veiculo.getId() != null) {
+                var veiculoOptional = veiculoRepository.findById(veiculo.getId());
+                if (veiculoOptional.isPresent()) {
+                    contratarServico.setPlacaCarro(veiculoOptional.get().getPlaca());
+                } else {
+
+                }
+            } else {
+
+            }
+        } else {
+
+        }
 
         ContratarServicoModel contratoServicoLavacar = contratarServicoRepository.save(contratarServico);
         atualizarTempoDeEspera(optional.get());
@@ -103,7 +155,7 @@ public class ContratarServicoService {
                 lavacar.setTempoFila(tempoFila);
                 String donoDoCarroToken = donocarroTokenFirebase;
                 String mensagem = "Seu carro está limpo e pronto para ser retirado. Sinta o frescor e o brilho da limpeza enquanto você volta para a estrada.";
-                // fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
+                fcmService.enviarNotServFinalizado(donoDoCarroToken, mensagem);
                 contratarServico.setTempFila(0);
                 lavacarRepository.save(lavacar);
             } else if (newContratarServico.getStatusServico() == StatusServico.EM_LAVAGEM) {
@@ -209,7 +261,7 @@ public class ContratarServicoService {
                 }
             }
 
-            if(contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
+            if (contrato.getStatusServico() == StatusServico.EM_LAVAGEM) {
 
             }
 
@@ -231,6 +283,10 @@ public class ContratarServicoService {
             contratarServicoRepository.save(contrato);
         }
 
+    }
+
+    public void tempoFila() {
+      
     }
 
     /*

@@ -43,8 +43,14 @@ public class ContratarServicoController {
         return new ContratarServicoDTO(contratarServicoService.contratarServicoLavacar(contratarServico));
     }
 
+    @PostMapping("/donocarro")
+    public ContratarServicoDTO createContratarServDonoCarro(@RequestBody ContratarServicoModel contratarServico) {
+
+        return new ContratarServicoDTO(contratarServicoService.contratarServicoDonoCarro(contratarServico));
+    }
+
     @GetMapping
-    public void debug(){
+    public void debug() {
         contratarServiceShedule.atualizarTempoEspera();
     }
 

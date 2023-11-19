@@ -1,6 +1,7 @@
 package com.br.lavaja.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +36,6 @@ public interface ContratarServicoRepository extends JpaRepository<ContratarServi
 
     @Query("SELECT c FROM ContratarServicoModel c  WHERE c.statusServico != 'AGUARDANDO' ")
     List<ContratarServicoModel> findServicosAguardando();
+
+    
 }
